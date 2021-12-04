@@ -733,21 +733,24 @@ class _HomePageState extends State<HomePage> {
                   margin: const EdgeInsets.only(top: 11, bottom: 11),
                   height: 45,
                   width: 45,
+                  padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       color: index == 2
                           ? const Color.fromRGBO(61, 68, 231, 1)
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(12)),
-                  child: Icon(
-                    Icons.person_rounded,
+                  child: SvgPicture.asset(
+                    "assets/image/menu3.svg",
                     color: index == 2
                         ? Colors.white
                         : const Color.fromRGBO(209, 209, 209, 1),
+                    height: 26,
+                    width: 26,
                   ),
                 ),
                 onTap: () => setState(
                   () {
-                    index = 0;
+                    index = 2;
                     controller.animateToPage(index,
                         duration: const Duration(milliseconds: 500),
                         curve: Curves.easeIn);
@@ -940,15 +943,15 @@ class _Home1PageState extends State<Home1Page> {
                 return Container(width: 0);
               }
             },
-            separatorBuilder: (context, index) => Container(width: 30),
+            separatorBuilder: (context, index) => Container(width: 20),
             itemCount: 11,
           ),
         ),
         SizedBox(
-          height: height * 0.05,
+          height: height * 0.04,
         ),
         Visibility(
-          visible: height > 800,
+          visible: height > 820,
           child: Flexible(
             child: Container(
               width: width * 0.875,
@@ -1007,7 +1010,7 @@ class _Home1PageState extends State<Home1Page> {
           ),
         ),
         SizedBox(
-          height: height * 0.05,
+          height: height * 0.04,
         ),
         Flexible(
           child: Container(
@@ -1089,7 +1092,7 @@ class _Home1PageState extends State<Home1Page> {
           ),
         ),
         SizedBox(
-          height: height * 0.05,
+          height: height * 0.04,
         ),
       ],
     );
