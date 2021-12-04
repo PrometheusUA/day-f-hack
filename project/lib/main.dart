@@ -1224,7 +1224,7 @@ class _Home2PageState extends State<Home2Page> {
                 color: Colors.black.withOpacity(0.5),
                 spreadRadius: 0,
                 blurRadius: 7,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
