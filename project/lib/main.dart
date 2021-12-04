@@ -43,11 +43,11 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return KeyboardVisibilityBuilder(builder: (context, visible) {
+    return KeyboardVisibilityBuilder(builder: (context1, visible) {
       return Scaffold(
         body: Container(
           width: width,
-          height: height,
+          height: height - MediaQuery.of(context).viewInsets.bottom,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -58,47 +58,55 @@ class _SignUpPageState extends State<SignUpPage> {
               ],
             ),
           ),
-          child: SingleChildScrollView(
-            primary: true,
-            child: Column(
-              children: [
-                //#region Logo
-                AnimatedContainer(
-                  alignment: Alignment.topCenter,
-                  duration: const Duration(milliseconds: 150),
-                  padding: EdgeInsets.only(top: height * (visible ? 0.1 : 0.2)),
-                  width: width * 0.4,
-                  child: SvgPicture.asset('assets/image/logo.svg'),
-                ),
-                //#endregion
-                //#region Sign in
-                Container(
-                  margin: const EdgeInsets.only(top: 23),
-                  child: GestureDetector(
-                    onTap: () => {Navigator.pushNamed(context, '/signin')},
-                    child: RichText(
-                      textDirection: TextDirection.ltr,
-                      text: TextSpan(
-                        text: "Already have an account? ",
-                        style: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w300,
-                          color: Colors.white.withOpacity(0.6),
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: "Sign in",
+          child: Column(
+            children: [
+              Flexible(
+                flex: 2,
+                child: Column(
+                  children: [
+                    //#region Logo
+                    AnimatedContainer(
+                      alignment: Alignment.topCenter,
+                      duration: const Duration(milliseconds: 150),
+                      padding:
+                          EdgeInsets.only(top: height * (visible ? 0.1 : 0.2)),
+                      width: width * 0.4,
+                      child: SvgPicture.asset('assets/image/logo.svg'),
+                    ),
+                    //#endregion
+                    //#region Sign in
+                    Container(
+                      margin: const EdgeInsets.only(top: 23),
+                      child: GestureDetector(
+                        onTap: () => {Navigator.pushNamed(context, '/signin')},
+                        child: RichText(
+                          textDirection: TextDirection.ltr,
+                          text: TextSpan(
+                            text: "Already have an account? ",
                             style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.white.withOpacity(0.6),
                             ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: "Sign in",
+                                style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
+                    //#endregion
+                  ],
                 ),
-                //#endregion
-                Container(
-                  margin: EdgeInsets.only(top: height * 0.23),
+              ),
+              Flexible(
+                flex: 2,
+                child: Container(
+                  alignment: Alignment.center,
                   width: width * 0.86,
                   child: Column(
                     children: [
@@ -204,8 +212,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
@@ -382,11 +390,11 @@ class _SignInTwoPageState extends State<SignUpPageTwo> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return KeyboardVisibilityBuilder(builder: (context, visible) {
+    return KeyboardVisibilityBuilder(builder: (context1, visible) {
       return Scaffold(
         body: Container(
           width: width,
-          height: height,
+          height: height - MediaQuery.of(context).viewInsets.bottom,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -397,35 +405,42 @@ class _SignInTwoPageState extends State<SignUpPageTwo> {
               ],
             ),
           ),
-          child: SingleChildScrollView(
-            primary: true,
-            child: Column(
-              children: [
-                //#region Logo
-                AnimatedContainer(
-                  alignment: Alignment.topCenter,
-                  padding: EdgeInsets.only(top: height * (visible ? 0.1 : 0.2)),
-                  duration: const Duration(milliseconds: 150),
-                  width: width * 0.4,
-                  child: SvgPicture.asset('assets/image/logo.svg'),
-                ),
-                //#endregion
-                Container(
-                  margin: const EdgeInsets.only(top: 23),
-                  child: GestureDetector(
-                    onTap: () => {},
-                    child: Text(
-                      'The best solutions from the best team',
-                      style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w300,
-                        color: Colors.white.withOpacity(0.6),
+          child: Column(
+            children: [
+              Flexible(
+                flex: 2,
+                child: Column(
+                  children: [
+                    //#region Logo
+                    AnimatedContainer(
+                      alignment: Alignment.topCenter,
+                      padding:
+                          EdgeInsets.only(top: height * (visible ? 0.1 : 0.2)),
+                      duration: const Duration(milliseconds: 150),
+                      width: width * 0.4,
+                      child: SvgPicture.asset('assets/image/logo.svg'),
+                    ),
+                    //#endregion
+                    Container(
+                      margin: const EdgeInsets.only(top: 23),
+                      child: GestureDetector(
+                        onTap: () => {},
+                        child: Text(
+                          'The best solutions from the best team',
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white.withOpacity(0.6),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 150),
-                  margin: EdgeInsets.only(top: height * (visible ? 0.2 : 0.3)),
+              ),
+              Flexible(
+                flex: 2,
+                child: Container(
+                  alignment: Alignment.center,
                   width: width * 0.86,
                   child: Column(
                     children: [
@@ -575,8 +590,8 @@ class _SignInTwoPageState extends State<SignUpPageTwo> {
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
@@ -726,163 +741,162 @@ class _HomePageState extends State<HomePage> {
               height: 146,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) => index == 0
-                    ? Container(
-                        margin: const EdgeInsets.only(left: 22),
-                        height: 146,
-                        width: 71,
-                        color: Colors.transparent,
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(top: 23),
-                              alignment: Alignment.center,
-                              height: 93,
-                              width: 67,
-                              decoration: BoxDecoration(
-                                  color: const Color.fromRGBO(0, 0, 0, 0.24),
-                                  borderRadius: BorderRadius.circular(13)),
-                              child: const Icon(
-                                Icons.add,
-                                size: 24,
-                                color: Color.fromRGBO(61, 68, 231, 1),
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return Container(
+                      margin: const EdgeInsets.only(left: 22),
+                      height: 146,
+                      width: 71,
+                      color: Colors.transparent,
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 23),
+                            alignment: Alignment.center,
+                            height: 93,
+                            width: 67,
+                            decoration: BoxDecoration(
+                                color: const Color.fromRGBO(0, 0, 0, 0.24),
+                                borderRadius: BorderRadius.circular(13)),
+                            child: const Icon(
+                              Icons.add,
+                              size: 24,
+                              color: Color.fromRGBO(61, 68, 231, 1),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 9),
+                            child: Text(
+                              "Add event",
+                              style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 10,
+                                color: Colors.white,
                               ),
                             ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 9),
-                              child: Text(
-                                "Add event",
-                                style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 10,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : Container(
-                        height: 146,
-                        width: 71,
-                        color: Colors.transparent,
-                        child: Stack(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(top: 23),
-                              alignment: Alignment.center,
-                              height: 93,
-                              width: 67,
-                              decoration: BoxDecoration(
-                                  image: const DecorationImage(
-                                    image: AssetImage(
-                                        "assets/image/Background.png"),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.circular(13)),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 20),
-                              alignment: Alignment.center,
-                              height: 93,
-                              width: 67,
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 22),
-                                    alignment: Alignment.center,
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          "17:00",
-                                          style: GoogleFonts.montserrat(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 10,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        Text(
-                                          "18/12/2021",
-                                          style: GoogleFonts.montserrat(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 10,
-                                            color: Colors.white,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 62),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        const Icon(Icons.schedule_rounded,
-                                            color: Colors.white, size: 10),
-                                        const SizedBox(width: 3),
-                                        Text("7d:8Hr",
-                                            style: GoogleFonts.montserrat(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 14,
-                                                color: Colors.white))
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 8.5,
-                                    height: 8.5,
-                                    decoration: BoxDecoration(
-                                        color: const Color.fromRGBO(
-                                            69, 239, 54, 1),
-                                        border: Border.all(color: Colors.white),
-                                        borderRadius:
-                                            BorderRadius.circular(5.5)),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    margin: const EdgeInsets.only(
-                                      left: 13,
-                                    ),
-                                    width: 8.5,
-                                    height: 8.5,
-                                    decoration: BoxDecoration(
-                                        color: const Color.fromRGBO(
-                                            255, 33, 219, 1),
-                                        border: Border.all(color: Colors.white),
-                                        borderRadius:
-                                            BorderRadius.circular(5.5)),
-                                    child: const Icon(
-                                        Icons.priority_high_rounded,
-                                        size: 6,
-                                        color: Colors.white),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.topCenter,
-                              margin: const EdgeInsets.only(top: 127),
-                              child: Text(
-                                "Add event",
-                                style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 10,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                separatorBuilder: (context, index) => Container(
-                  width: 35,
-                ),
-                itemCount: 10,
+                    );
+                  } else if (index != 10) {
+                    return Container(
+                      height: 146,
+                      width: 71,
+                      color: Colors.transparent,
+                      child: Stack(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 23),
+                            alignment: Alignment.center,
+                            height: 93,
+                            width: 67,
+                            decoration: BoxDecoration(
+                                image: const DecorationImage(
+                                  image:
+                                      AssetImage("assets/image/Background.png"),
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(13)),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 20),
+                            alignment: Alignment.center,
+                            height: 93,
+                            width: 67,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(top: 22),
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        "17:00",
+                                        style: GoogleFonts.montserrat(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 10,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Text(
+                                        "18/12/2021",
+                                        style: GoogleFonts.montserrat(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 10,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 62),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.schedule_rounded,
+                                          color: Colors.white, size: 10),
+                                      const SizedBox(width: 3),
+                                      Text("7d:8Hr",
+                                          style: GoogleFonts.montserrat(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 14,
+                                              color: Colors.white))
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  width: 8.5,
+                                  height: 8.5,
+                                  decoration: BoxDecoration(
+                                      color:
+                                          const Color.fromRGBO(69, 239, 54, 1),
+                                      border: Border.all(color: Colors.white),
+                                      borderRadius: BorderRadius.circular(5.5)),
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  margin: const EdgeInsets.only(
+                                    left: 13,
+                                  ),
+                                  width: 8.5,
+                                  height: 8.5,
+                                  decoration: BoxDecoration(
+                                      color:
+                                          const Color.fromRGBO(255, 33, 219, 1),
+                                      border: Border.all(color: Colors.white),
+                                      borderRadius: BorderRadius.circular(5.5)),
+                                  child: const Icon(Icons.priority_high_rounded,
+                                      size: 6, color: Colors.white),
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.topCenter,
+                            margin: const EdgeInsets.only(top: 127),
+                            child: Text(
+                              "Add event",
+                              style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 10,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Container(width: 0);
+                  }
+                },
+                separatorBuilder: (context, index) => Container(width: 30),
+                itemCount: 11,
               ),
             ),
             SizedBox(
-              height: 23,
+              height: height * 0.05,
             ),
             Flexible(
               child: Container(
@@ -894,36 +908,36 @@ class _HomePageState extends State<HomePage> {
                 child: Stack(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 13, left: 15),
+                      margin: const EdgeInsets.only(top: 13, left: 15),
                       child: Image.asset(
                         "assets/image/weather.png",
-                        height: 45,
-                        width: 45,
+                        height: 47 + height * 0.01,
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 20, left: 85),
+                      margin: const EdgeInsets.only(top: 20, left: 85),
                       child: Text(
                         "Weather 06.12.2021\n+21°, Windy",
                         style: GoogleFonts.montserrat(
-                            fontSize: 12, fontWeight: FontWeight.w600),
+                            fontSize: 15, fontWeight: FontWeight.w600),
                       ),
                     ),
                     Container(
                       alignment: Alignment.topRight,
-                      margin: EdgeInsets.only(top: 13, right: 18),
+                      margin: const EdgeInsets.only(top: 13, right: 18),
                       child: Text(
                         "21:37",
                         style: GoogleFonts.montserrat(
-                            fontSize: 35, fontWeight: FontWeight.w300),
+                            fontSize: 40, fontWeight: FontWeight.w300),
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 73, left: 21),
+                      alignment: Alignment.bottomLeft,
+                      margin: const EdgeInsets.only(bottom: 21, left: 21),
                       child: Text(
                         "Phrase of the day:\nЕврей не делает репосты потому что у него нет кнопки поделиться.",
                         style: GoogleFonts.montserrat(
-                            fontSize: 12, fontWeight: FontWeight.w600),
+                            fontSize: 15, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ],
@@ -931,7 +945,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SizedBox(
-              height: 23,
+              height: height * 0.05,
             ),
             Flexible(
               child: Container(
@@ -947,46 +961,41 @@ class _HomePageState extends State<HomePage> {
                       child: Container(
                         width: 58,
                         height: 58,
-                        margin: EdgeInsets.only(top: 19, right: 21),
-                        decoration: BoxDecoration(
-                            color: Color.fromRGBO(61, 68, 231, 1),
-                            borderRadius: BorderRadius.circular(29)),
-                        child: Icon(
-                          Icons.done_rounded,
-                        ),
+                        margin: const EdgeInsets.only(top: 19, right: 21),
+                        child: Image.asset("assets/image/image1.png"),
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 21, left: 19),
+                      margin: const EdgeInsets.only(top: 21, left: 19),
                       child: Text(
                         "Weekly statistics:",
                         style: GoogleFonts.montserrat(
-                            fontSize: 21, fontWeight: FontWeight.w600),
+                            fontSize: 24, fontWeight: FontWeight.w600),
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 43, left: 21),
+                      margin: const EdgeInsets.only(top: 55, left: 21),
                       child: Text(
                         "Tasks done 23",
                         style: GoogleFonts.montserrat(
-                            fontSize: 12, fontWeight: FontWeight.w500),
+                            fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 61, left: 21),
+                      margin: const EdgeInsets.only(top: 75, left: 21),
                       child: Text(
                         "Tasks left 7",
                         style: GoogleFonts.montserrat(
-                            fontSize: 12, fontWeight: FontWeight.w500),
+                            fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                     ),
                     Container(
-                      alignment: Alignment.topCenter,
-                      margin: EdgeInsets.only(top: 96.5),
+                      alignment: Alignment.bottomLeft,
+                      margin: const EdgeInsets.only(bottom: 20, left: 21),
                       child: Text(
                         "Your productivity is higher than N% of users.",
                         style: GoogleFonts.montserrat(
-                            fontSize: 12, fontWeight: FontWeight.w500),
+                            fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ],
@@ -994,7 +1003,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SizedBox(
-              height: 23,
+              height: height * 0.05,
             ),
           ],
         ),
