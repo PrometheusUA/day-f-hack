@@ -41,13 +41,14 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
+    double height = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).viewInsets.bottom;
     double width = MediaQuery.of(context).size.width;
     return KeyboardVisibilityBuilder(builder: (context1, visible) {
       return Scaffold(
         body: Container(
           width: width,
-          height: height - MediaQuery.of(context).viewInsets.bottom,
+          height: height,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -60,22 +61,20 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           child: Column(
             children: [
-              Flexible(
-                flex: 2,
-                child: Column(
-                  children: [
-                    //#region Logo
-                    AnimatedContainer(
-                      alignment: Alignment.topCenter,
-                      duration: const Duration(milliseconds: 150),
-                      padding:
-                          EdgeInsets.only(top: height * (visible ? 0.1 : 0.2)),
-                      width: width * 0.4,
-                      child: SvgPicture.asset('assets/image/logo.svg'),
-                    ),
-                    //#endregion
-                    //#region Sign in
-                    Container(
+              Spacer(flex: 1),
+              Column(
+                children: [
+                  //#region Logo
+                  Container(
+                    alignment: Alignment.topCenter,
+                    width: width * 0.4,
+                    child: SvgPicture.asset('assets/image/logo.svg'),
+                  ),
+                  //#endregion
+                  //#region Sign in
+                  Visibility(
+                    visible: height > 350,
+                    child: Container(
                       margin: const EdgeInsets.only(top: 23),
                       child: GestureDetector(
                         onTap: () => {Navigator.pushNamed(context, '/signin')},
@@ -99,120 +98,113 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                     ),
+                  ) //#endregion
+                ],
+              ),
+              Spacer(flex: 2),
+              Container(
+                alignment: Alignment.center,
+                width: width * 0.86,
+                child: Column(
+                  children: [
+                    //#region Email
+                    Container(
+                      height: 37,
+                      decoration: BoxDecoration(
+                          color: const Color.fromRGBO(255, 255, 255, 0.09),
+                          borderRadius: BorderRadius.circular(5.37)),
+                      child: TextFormField(
+                        initialValue: '',
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Email',
+                          hintStyle: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w400,
+                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding:
+                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                        ),
+                      ),
+                    ),
+                    //#endregion
+                    //#region Password
+                    Container(
+                      margin: const EdgeInsets.only(top: 4.3),
+                      height: 37,
+                      decoration: BoxDecoration(
+                          color: const Color.fromRGBO(255, 255, 255, 0.09),
+                          borderRadius: BorderRadius.circular(5.37)),
+                      child: TextFormField(
+                        initialValue: '',
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Create password',
+                          hintStyle: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w400,
+                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding:
+                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                        ),
+                      ),
+                    ),
+                    //#endregion
+                    //#region Confirm password
+                    Container(
+                      margin: const EdgeInsets.only(top: 4.3),
+                      height: 37,
+                      decoration: BoxDecoration(
+                          color: const Color.fromRGBO(255, 255, 255, 0.09),
+                          borderRadius: BorderRadius.circular(5.37)),
+                      child: TextFormField(
+                        initialValue: '',
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Repeat password',
+                          hintStyle: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w400,
+                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding:
+                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                        ),
+                      ),
+                    ),
+                    //#endregion
+                    //#region Register
+                    Container(
+                      width: width * 0.86,
+                      height: 48.37,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.37),
+                        color: const Color.fromRGBO(48, 35, 174, 1),
+                      ),
+                      margin: const EdgeInsets.only(top: 9),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => Navigator.pushNamed(context, '/signintwo'),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Register",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.montserrat(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    )
                     //#endregion
                   ],
                 ),
               ),
-              Flexible(
-                flex: 2,
-                child: Container(
-                  alignment: Alignment.center,
-                  width: width * 0.86,
-                  child: Column(
-                    children: [
-                      //#region Email
-                      Container(
-                        height: 37,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(255, 255, 255, 0.09),
-                            borderRadius: BorderRadius.circular(5.37)),
-                        child: TextFormField(
-                          initialValue: '',
-                          style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.5)),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Email',
-                            hintStyle: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w400,
-                                color:
-                                    const Color.fromRGBO(255, 255, 255, 0.45)),
-                            contentPadding:
-                                const EdgeInsets.only(left: 14.5, bottom: 9),
-                          ),
-                        ),
-                      ),
-                      //#endregion
-                      //#region Password
-                      Container(
-                        margin: const EdgeInsets.only(top: 4.3),
-                        height: 37,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(255, 255, 255, 0.09),
-                            borderRadius: BorderRadius.circular(5.37)),
-                        child: TextFormField(
-                          initialValue: '',
-                          style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.5)),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Create password',
-                            hintStyle: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w400,
-                                color:
-                                    const Color.fromRGBO(255, 255, 255, 0.45)),
-                            contentPadding:
-                                const EdgeInsets.only(left: 14.5, bottom: 9),
-                          ),
-                        ),
-                      ),
-                      //#endregion
-                      //#region Confirm password
-                      Container(
-                        margin: const EdgeInsets.only(top: 4.3),
-                        height: 37,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(255, 255, 255, 0.09),
-                            borderRadius: BorderRadius.circular(5.37)),
-                        child: TextFormField(
-                          initialValue: '',
-                          style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.5)),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Repeat password',
-                            hintStyle: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w400,
-                                color:
-                                    const Color.fromRGBO(255, 255, 255, 0.45)),
-                            contentPadding:
-                                const EdgeInsets.only(left: 14.5, bottom: 9),
-                          ),
-                        ),
-                      ),
-                      //#endregion
-                      //#region Register
-                      Container(
-                        width: width * 0.86,
-                        height: 48.37,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.37),
-                          color: const Color.fromRGBO(48, 35, 174, 1),
-                        ),
-                        margin: const EdgeInsets.only(top: 9),
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () =>
-                              Navigator.pushNamed(context, '/signintwo'),
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "Register",
-                              textAlign: TextAlign.center,
-                              style:
-                                  GoogleFonts.montserrat(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      )
-                      //#endregion
-                    ],
-                  ),
-                ),
-              ),
+              Spacer(flex: 1),
             ],
           ),
         ),
@@ -388,13 +380,14 @@ class _SignInTwoPageState extends State<SignUpPageTwo> {
   String type = 'Student';
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
+    double height = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).viewInsets.bottom;
     double width = MediaQuery.of(context).size.width;
     return KeyboardVisibilityBuilder(builder: (context1, visible) {
       return Scaffold(
         body: Container(
           width: width,
-          height: height - MediaQuery.of(context).viewInsets.bottom,
+          height: height,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -407,21 +400,21 @@ class _SignInTwoPageState extends State<SignUpPageTwo> {
           ),
           child: Column(
             children: [
-              Flexible(
-                flex: 2,
-                child: Column(
-                  children: [
-                    //#region Logo
-                    AnimatedContainer(
-                      alignment: Alignment.topCenter,
-                      padding:
-                          EdgeInsets.only(top: height * (visible ? 0.1 : 0.2)),
-                      duration: const Duration(milliseconds: 150),
-                      width: width * 0.4,
-                      child: SvgPicture.asset('assets/image/logo.svg'),
-                    ),
-                    //#endregion
-                    Container(
+              const Spacer(
+                flex: 1,
+              ),
+              Column(
+                children: [
+                  //#region Logo
+                  Container(
+                    alignment: Alignment.topCenter,
+                    width: width * 0.4,
+                    child: SvgPicture.asset('assets/image/logo.svg'),
+                  ),
+                  //#endregion
+                  Visibility(
+                    visible: height > 350,
+                    child: Container(
                       margin: const EdgeInsets.only(top: 23),
                       child: GestureDetector(
                         onTap: () => {},
@@ -434,162 +427,161 @@ class _SignInTwoPageState extends State<SignUpPageTwo> {
                         ),
                       ),
                     ),
+                  ),
+                ],
+              ),
+              const Spacer(
+                flex: 2,
+              ),
+              Container(
+                alignment: Alignment.center,
+                width: width * 0.86,
+                child: Column(
+                  children: [
+                    //#region Job
+                    Container(
+                      height: 37,
+                      width: width * 0.86,
+                      padding: const EdgeInsets.only(left: 14.33),
+                      decoration: BoxDecoration(
+                          color: const Color.fromRGBO(255, 255, 255, 0.09),
+                          borderRadius: BorderRadius.circular(5.37)),
+                      child: IgnorePointer(
+                        ignoring: true,
+                        child: DropdownButton<String>(
+                          dropdownColor: Colors.black,
+                          value: type,
+                          underline: Container(),
+                          icon: Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.only(right: 6),
+                              child: const Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Icon(Icons.arrow_drop_down)),
+                            ),
+                          ),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(255, 255, 255, 0.45),
+                            fontSize: 16,
+                          ),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              type = newValue!;
+                            });
+                          },
+                          items: <String>['Student', 'Teacher', 'Other']
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                    //#endregion
+                    //#region First Name
+                    Container(
+                      margin: const EdgeInsets.only(top: 4.3),
+                      height: 37,
+                      decoration: BoxDecoration(
+                          color: const Color.fromRGBO(255, 255, 255, 0.09),
+                          borderRadius: BorderRadius.circular(5.37)),
+                      child: TextFormField(
+                        initialValue: '',
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'First Name',
+                          hintStyle: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w400,
+                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding:
+                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                        ),
+                      ),
+                    ),
+                    //#endregion
+                    //#region Last Name
+                    Container(
+                      margin: const EdgeInsets.only(top: 4.3),
+                      height: 37,
+                      decoration: BoxDecoration(
+                          color: const Color.fromRGBO(255, 255, 255, 0.09),
+                          borderRadius: BorderRadius.circular(5.37)),
+                      child: TextFormField(
+                        initialValue: '',
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Last Name',
+                          hintStyle: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w400,
+                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding:
+                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                        ),
+                      ),
+                    ),
+                    //#endregion
+                    //#region Username
+                    Container(
+                      margin: const EdgeInsets.only(top: 4.3),
+                      height: 37,
+                      decoration: BoxDecoration(
+                          color: const Color.fromRGBO(255, 255, 255, 0.09),
+                          borderRadius: BorderRadius.circular(5.37)),
+                      child: TextFormField(
+                        initialValue: '',
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Create username',
+                          hintStyle: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w400,
+                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding:
+                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                        ),
+                      ),
+                    ),
+                    //#endregion
+                    //#region Start
+                    Container(
+                      width: width * 0.86,
+                      height: 48.37,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.37),
+                        color: const Color.fromRGBO(48, 35, 174, 1),
+                      ),
+                      margin: const EdgeInsets.only(top: 9),
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context).pushNamed("/home"),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Start using FASA",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.montserrat(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    )
+                    //#endregion
                   ],
                 ),
               ),
-              Flexible(
-                flex: 2,
-                child: Container(
-                  alignment: Alignment.center,
-                  width: width * 0.86,
-                  child: Column(
-                    children: [
-                      //#region Job
-                      Container(
-                        height: 37,
-                        width: width * 0.86,
-                        padding: const EdgeInsets.only(left: 14.33),
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(255, 255, 255, 0.09),
-                            borderRadius: BorderRadius.circular(5.37)),
-                        child: IgnorePointer(
-                          ignoring: true,
-                          child: DropdownButton<String>(
-                            dropdownColor: Colors.black,
-                            value: type,
-                            underline: Container(),
-                            icon: Expanded(
-                              child: Container(
-                                padding: const EdgeInsets.only(right: 6),
-                                child: const Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Icon(Icons.arrow_drop_down)),
-                              ),
-                            ),
-                            iconSize: 24,
-                            elevation: 16,
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.45),
-                              fontSize: 16,
-                            ),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                type = newValue!;
-                              });
-                            },
-                            items: <String>['Student', 'Teacher', 'Other']
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                      //#endregion
-                      //#region First Name
-                      Container(
-                        margin: const EdgeInsets.only(top: 4.3),
-                        height: 37,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(255, 255, 255, 0.09),
-                            borderRadius: BorderRadius.circular(5.37)),
-                        child: TextFormField(
-                          initialValue: '',
-                          style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.5)),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'First Name',
-                            hintStyle: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w400,
-                                color:
-                                    const Color.fromRGBO(255, 255, 255, 0.45)),
-                            contentPadding:
-                                const EdgeInsets.only(left: 14.5, bottom: 9),
-                          ),
-                        ),
-                      ),
-                      //#endregion
-                      //#region Last Name
-                      Container(
-                        margin: const EdgeInsets.only(top: 4.3),
-                        height: 37,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(255, 255, 255, 0.09),
-                            borderRadius: BorderRadius.circular(5.37)),
-                        child: TextFormField(
-                          initialValue: '',
-                          style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.5)),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Last Name',
-                            hintStyle: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w400,
-                                color:
-                                    const Color.fromRGBO(255, 255, 255, 0.45)),
-                            contentPadding:
-                                const EdgeInsets.only(left: 14.5, bottom: 9),
-                          ),
-                        ),
-                      ),
-                      //#endregion
-                      //#region Username
-                      Container(
-                        margin: const EdgeInsets.only(top: 4.3),
-                        height: 37,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(255, 255, 255, 0.09),
-                            borderRadius: BorderRadius.circular(5.37)),
-                        child: TextFormField(
-                          initialValue: '',
-                          style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.5)),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Create username',
-                            hintStyle: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w400,
-                                color:
-                                    const Color.fromRGBO(255, 255, 255, 0.45)),
-                            contentPadding:
-                                const EdgeInsets.only(left: 14.5, bottom: 9),
-                          ),
-                        ),
-                      ),
-                      //#endregion
-                      //#region Start
-                      Container(
-                        width: width * 0.86,
-                        height: 48.37,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.37),
-                          color: const Color.fromRGBO(48, 35, 174, 1),
-                        ),
-                        margin: const EdgeInsets.only(top: 9),
-                        child: GestureDetector(
-                          onTap: () => Navigator.of(context).pushNamed("/home"),
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "Start using FASA",
-                              textAlign: TextAlign.center,
-                              style:
-                                  GoogleFonts.montserrat(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      )
-                      //#endregion
-                    ],
-                  ),
-                ),
+              const Spacer(
+                flex: 1,
               ),
             ],
           ),
