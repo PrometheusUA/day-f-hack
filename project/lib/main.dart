@@ -223,9 +223,10 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
+    double height = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).viewInsets.bottom;
     double width = MediaQuery.of(context).size.width;
-    return KeyboardVisibilityBuilder(builder: (context, visible) {
+    return KeyboardVisibilityBuilder(builder: (context1, visible) {
       return Scaffold(
         body: Container(
           width: width,
@@ -240,20 +241,19 @@ class _SignInPageState extends State<SignInPage> {
               ],
             ),
           ),
-          child: SingleChildScrollView(
-            primary: true,
-            child: Column(
-              children: [
-                //#region Logo
-                AnimatedContainer(
-                  alignment: Alignment.topCenter,
-                  padding: EdgeInsets.only(top: height * (visible ? 0.1 : 0.2)),
-                  duration: const Duration(milliseconds: 150),
-                  width: width * 0.4,
-                  child: SvgPicture.asset('assets/image/logo.svg'),
-                ),
-                //#endregion
-                Container(
+          child: Column(
+            children: [
+              const Spacer(flex: 1),
+              //#region Logo
+              Container(
+                alignment: Alignment.topCenter,
+                width: width * 0.4,
+                child: SvgPicture.asset('assets/image/logo.svg'),
+              ),
+              //#endregion
+              Visibility(
+                visible: height > 350,
+                child: Container(
                   margin: const EdgeInsets.only(top: 23),
                   child: GestureDetector(
                     onTap: () => {},
@@ -266,102 +266,100 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(top: height * (visible ? 0.23 : 0.3)),
-                  width: width * 0.86,
-                  child: Column(
-                    children: [
-                      //#region Email
-                      Container(
-                        height: 37,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(255, 255, 255, 0.09),
-                            borderRadius: BorderRadius.circular(5.37)),
-                        child: TextFormField(
-                          initialValue: '',
-                          style: GoogleFonts.montserrat(
+              ),
+              const Spacer(flex: 2),
+              SizedBox(
+                width: width * 0.86,
+                child: Column(
+                  children: [
+                    //#region Email
+                    Container(
+                      height: 37,
+                      decoration: BoxDecoration(
+                          color: const Color.fromRGBO(255, 255, 255, 0.09),
+                          borderRadius: BorderRadius.circular(5.37)),
+                      child: TextFormField(
+                        initialValue: '',
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Email',
+                          hintStyle: GoogleFonts.montserrat(
                               fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.5)),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Email',
-                            hintStyle: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w400,
-                                color:
-                                    const Color.fromRGBO(255, 255, 255, 0.45)),
-                            contentPadding:
-                                const EdgeInsets.only(left: 14.5, bottom: 9),
+                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding:
+                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                        ),
+                      ),
+                    ),
+                    //#endregion
+                    //#region Password
+                    Container(
+                      margin: const EdgeInsets.only(top: 4.3),
+                      height: 37,
+                      decoration: BoxDecoration(
+                          color: const Color.fromRGBO(255, 255, 255, 0.09),
+                          borderRadius: BorderRadius.circular(5.37)),
+                      child: TextFormField(
+                        initialValue: '',
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Create password',
+                          hintStyle: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w400,
+                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding:
+                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                        ),
+                      ),
+                    ),
+                    //#endregion
+                    //#region Sign in
+                    Container(
+                      width: width * 0.86,
+                      height: 48.37,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.37),
+                        color: const Color.fromRGBO(48, 35, 174, 1),
+                      ),
+                      margin: const EdgeInsets.only(top: 9),
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context).pushNamed("/home"),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Sign In",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.montserrat(color: Colors.white),
                           ),
                         ),
                       ),
-                      //#endregion
-                      //#region Password
-                      Container(
-                        margin: const EdgeInsets.only(top: 4.3),
-                        height: 37,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(255, 255, 255, 0.09),
-                            borderRadius: BorderRadius.circular(5.37)),
-                        child: TextFormField(
-                          initialValue: '',
-                          style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.5)),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Create password',
-                            hintStyle: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w400,
-                                color:
-                                    const Color.fromRGBO(255, 255, 255, 0.45)),
-                            contentPadding:
-                                const EdgeInsets.only(left: 14.5, bottom: 9),
-                          ),
-                        ),
-                      ),
-                      //#endregion
-                      //#region Sign in
-                      Container(
-                        width: width * 0.86,
-                        height: 48.37,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.37),
-                          color: const Color.fromRGBO(48, 35, 174, 1),
-                        ),
-                        margin: const EdgeInsets.only(top: 9),
-                        child: GestureDetector(
-                          onTap: () => {},
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "Sign In",
-                              textAlign: TextAlign.center,
-                              style:
-                                  GoogleFonts.montserrat(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      )
-                      //#endregion
-                    ],
+                    )
+                    //#endregion
+                  ],
+                ),
+              ),
+              //#region Back
+              Container(
+                alignment: Alignment.topLeft,
+                margin: EdgeInsets.only(top: 36, left: width * 0.07),
+                child: GestureDetector(
+                  onTap: () => {Navigator.pop(context)},
+                  child: Text(
+                    'Back',
+                    style: GoogleFonts.montserrat(
+                        color: Colors.white, fontSize: 16),
                   ),
                 ),
-                //#region Back
-                Container(
-                  alignment: Alignment.topLeft,
-                  margin: EdgeInsets.only(top: 36, left: width * 0.07),
-                  child: GestureDetector(
-                    onTap: () => {Navigator.pop(context)},
-                    child: Text(
-                      'Back',
-                      style: GoogleFonts.montserrat(
-                          color: Colors.white, fontSize: 16),
-                    ),
-                  ),
-                )
-                //#endregion
-              ],
-            ),
+              ),
+              //#endregion
+              const Spacer(flex: 1)
+            ],
           ),
         ),
       );
@@ -890,49 +888,53 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: height * 0.05,
             ),
-            Flexible(
-              child: Container(
-                width: width * 0.875,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white,
-                ),
-                child: Stack(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 13, left: 15),
-                      child: Image.asset(
-                        "assets/image/weather.png",
-                        height: 47 + height * 0.01,
+            Visibility(
+              visible: height > 775,
+              child: Flexible(
+                child: Container(
+                  width: width * 0.875,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.white,
+                  ),
+                  child: Stack(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 13, left: 15),
+                        child: Image.asset(
+                          "assets/image/weather.png",
+                          height: 47 + height * 0.01,
+                        ),
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 20, left: 85),
-                      child: Text(
-                        "Weather 06.12.2021\n+21°, Windy",
-                        style: GoogleFonts.montserrat(
-                            fontSize: 15, fontWeight: FontWeight.w600),
+                      Container(
+                        margin: const EdgeInsets.only(top: 20, left: 85),
+                        child: Text(
+                          "Weather 06.12.2021\n+21°, Windy",
+                          style: GoogleFonts.montserrat(
+                              fontSize: 15, fontWeight: FontWeight.w600),
+                        ),
                       ),
-                    ),
-                    Container(
-                      alignment: Alignment.topRight,
-                      margin: const EdgeInsets.only(top: 13, right: 18),
-                      child: Text(
-                        "21:37",
-                        style: GoogleFonts.montserrat(
-                            fontSize: 40, fontWeight: FontWeight.w300),
+                      Container(
+                        alignment: Alignment.topRight,
+                        margin: const EdgeInsets.only(top: 13, right: 18),
+                        child: Text(
+                          "21:37",
+                          style: GoogleFonts.montserrat(
+                              fontSize: 40, fontWeight: FontWeight.w300),
+                        ),
                       ),
-                    ),
-                    Container(
-                      alignment: Alignment.bottomLeft,
-                      margin: const EdgeInsets.only(bottom: 21, left: 21),
-                      child: Text(
-                        "Phrase of the day:\nЕврей не делает репосты потому что у него нет кнопки поделиться.",
-                        style: GoogleFonts.montserrat(
-                            fontSize: 15, fontWeight: FontWeight.w600),
+                      Container(
+                        alignment: Alignment.bottomLeft,
+                        margin: const EdgeInsets.only(
+                            bottom: 21, left: 21, right: 21),
+                        child: Text(
+                          "Phrase of the day:\nЕврей не делает репосты потому что у него нет кнопки поделиться.",
+                          style: GoogleFonts.montserrat(
+                              fontSize: 15, fontWeight: FontWeight.w600),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -941,6 +943,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Flexible(
               child: Container(
+                constraints: const BoxConstraints(maxHeight: 230, minHeight: 160 ),
                 width: width * 0.875,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
@@ -977,6 +980,14 @@ class _HomePageState extends State<HomePage> {
                       margin: const EdgeInsets.only(top: 75, left: 21),
                       child: Text(
                         "Tasks left 7",
+                        style: GoogleFonts.montserrat(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 95, left: 21),
+                      child: Text(
+                        "Tasks failed 17",
                         style: GoogleFonts.montserrat(
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),
