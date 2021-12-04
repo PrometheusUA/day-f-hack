@@ -660,7 +660,17 @@ class _HomePageState extends State<HomePage> {
         bottomNavigationBar: Container(
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(13), color: Colors.white),
+            borderRadius: BorderRadius.circular(13),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 10,
+                offset: const Offset(0, 7), // changes position of shadow
+              ),
+            ],
+          ),
           margin: const EdgeInsets.only(left: 18, right: 18, bottom: 18),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -713,7 +723,7 @@ class _HomePageState extends State<HomePage> {
                   () {
                     index = 1;
                     controller.animateToPage(index,
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         curve: Curves.easeIn);
                   },
                 ),
@@ -739,7 +749,7 @@ class _HomePageState extends State<HomePage> {
                   () {
                     index = 0;
                     controller.animateToPage(index,
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         curve: Curves.easeIn);
                   },
                 ),
@@ -753,6 +763,7 @@ class _HomePageState extends State<HomePage> {
           children: const [
             Home1Page(),
             Home2Page(),
+            Home3Page(),
           ],
           onPageChanged: (i) => setState(() => index = i),
         ),
@@ -959,7 +970,10 @@ class _Home1PageState extends State<Home1Page> {
                     child: Text(
                       "Weather 06.12.2021\n+21°, Windy",
                       style: GoogleFonts.montserrat(
-                          fontSize: 15, fontWeight: FontWeight.w600),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: const Color.fromRGBO(2, 36, 111, 1),
+                      ),
                     ),
                   ),
                   Container(
@@ -968,7 +982,10 @@ class _Home1PageState extends State<Home1Page> {
                     child: Text(
                       "21:37",
                       style: GoogleFonts.montserrat(
-                          fontSize: 40, fontWeight: FontWeight.w300),
+                        fontSize: 40,
+                        fontWeight: FontWeight.w300,
+                        color: const Color.fromRGBO(2, 36, 111, 1),
+                      ),
                     ),
                   ),
                   Container(
@@ -978,7 +995,10 @@ class _Home1PageState extends State<Home1Page> {
                     child: Text(
                       "Phrase of the day:\nЕврей не делает репосты потому что у него нет кнопки поделиться.",
                       style: GoogleFonts.montserrat(
-                          fontSize: 15, fontWeight: FontWeight.w600),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: const Color.fromRGBO(2, 36, 111, 1),
+                      ),
                     ),
                   ),
                 ],
@@ -1013,7 +1033,10 @@ class _Home1PageState extends State<Home1Page> {
                   child: Text(
                     "Weekly statistics:",
                     style: GoogleFonts.montserrat(
-                        fontSize: 24, fontWeight: FontWeight.w600),
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                      color: const Color.fromRGBO(2, 36, 111, 1),
+                    ),
                   ),
                 ),
                 Container(
@@ -1021,7 +1044,10 @@ class _Home1PageState extends State<Home1Page> {
                   child: Text(
                     "Tasks done 23",
                     style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w500),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: const Color.fromRGBO(2, 36, 111, 1),
+                    ),
                   ),
                 ),
                 Container(
@@ -1029,7 +1055,10 @@ class _Home1PageState extends State<Home1Page> {
                   child: Text(
                     "Tasks left 7",
                     style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w500),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: const Color.fromRGBO(2, 36, 111, 1),
+                    ),
                   ),
                 ),
                 Container(
@@ -1037,7 +1066,10 @@ class _Home1PageState extends State<Home1Page> {
                   child: Text(
                     "Tasks failed 17",
                     style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w500),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: const Color.fromRGBO(2, 36, 111, 1),
+                    ),
                   ),
                 ),
                 Container(
@@ -1046,7 +1078,10 @@ class _Home1PageState extends State<Home1Page> {
                   child: Text(
                     "Your productivity is higher than N% of users.",
                     style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w500),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: const Color.fromRGBO(2, 36, 111, 1),
+                    ),
                   ),
                 ),
               ],
@@ -1084,133 +1119,219 @@ class _Home2PageState extends State<Home2Page> {
           child: ListView.builder(
             scrollDirection: Axis.vertical,
             itemBuilder: (context, index) {
-              return Container(
-                padding:
-                    index == 0 ? EdgeInsets.only(top: 70) : EdgeInsets.zero,
-                margin: const EdgeInsets.symmetric(vertical: 6),
-                child: Stack(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      height: 170,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 18, left: 15),
-                      child: Text(
-                        "Labortornaya",
-                        style: GoogleFonts.montserrat(
-                            fontSize: 23, fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 41, left: 15),
-                      child: Text(
-                        "The numbers from the textbook\nAntiDemidovich\n13.5, 13.6, 15.1, 18.1-5",
-                        style: GoogleFonts.montserrat(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
+              if (index != 5) {
+                return Container(
+                  padding: index == 0
+                      ? const EdgeInsets.only(top: 70)
+                      : EdgeInsets.zero,
+                  margin: const EdgeInsets.symmetric(vertical: 6),
+                  child: Stack(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        height: 170,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Container(
-                        margin: const EdgeInsets.only(right: 11),
-                        width: 17,
-                        height: 17,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(69, 239, 54, 1),
-                            border: Border.all(color: Colors.white, width: 2.5),
-                            borderRadius: BorderRadius.circular(9)),
+                      Container(
+                        margin: const EdgeInsets.only(top: 18, left: 15),
+                        child: Text(
+                          "Labortornaya",
+                          style: GoogleFonts.montserrat(
+                            fontSize: 23,
+                            fontWeight: FontWeight.w500,
+                            color: const Color.fromRGBO(2, 36, 111, 1),
+                          ),
+                        ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Container(
-                        margin: const EdgeInsets.only(right: 34),
-                        width: 17,
-                        height: 17,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(255, 33, 219, 1),
-                            border: Border.all(color: Colors.white, width: 2.5),
-                            borderRadius: BorderRadius.circular(9)),
-                        child: const Icon(Icons.priority_high_rounded,
-                            size: 8, color: Colors.white),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 115, left: 15),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 1, horizontal: 7),
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(182, 211, 255, 1),
-                          borderRadius: BorderRadius.circular(3)),
-                      child: Text(
-                        "#algebra Tuesday Denisenko",
-                        style: GoogleFonts.montserrat(
+                      Container(
+                        margin: const EdgeInsets.only(top: 41, left: 15),
+                        child: Text(
+                          "The numbers from the textbook\nAntiDemidovich\n13.5, 13.6, 15.1, 18.1-5",
+                          style: GoogleFonts.montserrat(
                             fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: const Color.fromRGBO(27, 118, 253, 1)),
+                            fontWeight: FontWeight.w500,
+                            color: const Color.fromRGBO(2, 36, 111, 1),
+                          ),
+                        ),
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 145),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 1, horizontal: 21),
-                            decoration: BoxDecoration(
-                                color: const Color.fromRGBO(182, 255, 198, 1),
-                                borderRadius: BorderRadius.circular(3)),
-                            child: Text(
-                              "task done",
-                              style: GoogleFonts.montserrat(
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 11),
+                          width: 17,
+                          height: 17,
+                          decoration: BoxDecoration(
+                              color: const Color.fromRGBO(69, 239, 54, 1),
+                              border:
+                                  Border.all(color: Colors.white, width: 2.5),
+                              borderRadius: BorderRadius.circular(9)),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 34),
+                          width: 17,
+                          height: 17,
+                          decoration: BoxDecoration(
+                              color: const Color.fromRGBO(255, 33, 219, 1),
+                              border:
+                                  Border.all(color: Colors.white, width: 2.5),
+                              borderRadius: BorderRadius.circular(9)),
+                          child: const Icon(Icons.priority_high_rounded,
+                              size: 8, color: Colors.white),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 115, left: 15),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 1, horizontal: 7),
+                        decoration: BoxDecoration(
+                            color: const Color.fromRGBO(182, 211, 255, 1),
+                            borderRadius: BorderRadius.circular(3)),
+                        child: Text(
+                          "#algebra Tuesday Denisenko",
+                          style: GoogleFonts.montserrat(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: const Color.fromRGBO(27, 118, 253, 1)),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 145),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 1, horizontal: 21),
+                              decoration: BoxDecoration(
+                                  color: const Color.fromRGBO(182, 255, 198, 1),
+                                  borderRadius: BorderRadius.circular(3)),
+                              child: Text(
+                                "task done",
+                                style: GoogleFonts.montserrat(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: const Color.fromRGBO(0, 220, 62, 1)),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 1, horizontal: 21),
+                              decoration: BoxDecoration(
+                                  color: const Color.fromRGBO(254, 255, 182, 1),
+                                  borderRadius: BorderRadius.circular(3)),
+                              child: Text(
+                                "cancel task",
+                                style: GoogleFonts.montserrat(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
-                                  color: const Color.fromRGBO(0, 220, 62, 1)),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 1, horizontal: 21),
-                            decoration: BoxDecoration(
-                                color: const Color.fromRGBO(254, 255, 182, 1),
-                                borderRadius: BorderRadius.circular(3)),
-                            child: Text(
-                              "cancel task",
-                              style: GoogleFonts.montserrat(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: const Color.fromRGBO(220, 211, 0, 1),
+                                  color: const Color.fromRGBO(220, 211, 0, 1),
+                                ),
                               ),
                             ),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.schedule_rounded,
+                                  size: 10,
+                                  color: Color.fromRGBO(69, 239, 54, 1),
+                                ),
+                                Text("7d:8Hr",
+                                    style: GoogleFonts.roboto(
+                                        fontWeight: FontWeight.w400,
+                                        color: const Color.fromRGBO(
+                                            69, 239, 54, 1)))
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              } else {
+                return Container(
+                  margin: const EdgeInsets.symmetric(vertical: 6),
+                  child: Stack(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        height: 170,
+                        width: width * 1,
+                        decoration: BoxDecoration(
+                          image: const DecorationImage(
+                            image: AssetImage("assets/image/image2.png"),
+                            fit: BoxFit.cover,
                           ),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.schedule_rounded,
-                                size: 10,
-                                color: Color.fromRGBO(69, 239, 54, 1),
-                              ),
-                              Text("7d:8Hr",
-                                  style: GoogleFonts.roboto(
-                                      fontWeight: FontWeight.w400,
-                                      color:
-                                          const Color.fromRGBO(69, 239, 54, 1)))
-                            ],
-                          )
-                        ],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                    )
-                  ],
-                ),
-              );
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 11),
+                          width: 17,
+                          height: 17,
+                          decoration: BoxDecoration(
+                              color: const Color.fromRGBO(69, 239, 54, 1),
+                              border: Border.all(
+                                color: Color.fromRGBO(3, 30, 54, 1),
+                                width: 2.5,
+                              ),
+                              borderRadius: BorderRadius.circular(9)),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 34),
+                          width: 17,
+                          height: 17,
+                          decoration: BoxDecoration(
+                              color: const Color.fromRGBO(255, 33, 219, 1),
+                              border: Border.all(
+                                color: Color.fromRGBO(3, 30, 54, 1),
+                                width: 2.5,
+                              ),
+                              borderRadius: BorderRadius.circular(9)),
+                          child: const Icon(Icons.priority_high_rounded,
+                              size: 8, color: Colors.white),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 140, left: 15),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 1, horizontal: 15),
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(250, 252, 173, 1),
+                          borderRadius: BorderRadius.circular(3),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(250, 252, 173, 1),
+                              spreadRadius: 0,
+                              blurRadius: 7,
+                              offset:
+                                  Offset(0, 1), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          "Time to rest",
+                          style: GoogleFonts.montserrat(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: const Color.fromRGBO(228, 193, 7, 1)),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
             },
             itemCount: 10,
           ),
@@ -1229,7 +1350,7 @@ class _Home2PageState extends State<Home2Page> {
             ],
           ),
           margin: EdgeInsets.symmetric(horizontal: width * 0.041),
-          height: 47,
+          height: 51,
           width: width * 0.918,
           child: Center(
             child: Text(
@@ -1239,6 +1360,219 @@ class _Home2PageState extends State<Home2Page> {
                   fontWeight: FontWeight.w400,
                   color: Colors.white),
             ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class Home3Page extends StatefulWidget {
+  const Home3Page({Key? key}) : super(key: key);
+
+  @override
+  _Home3PageState createState() => _Home3PageState();
+}
+
+class _Home3PageState extends State<Home3Page> {
+  @override
+  Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    return Stack(
+      children: [
+        Container(
+          height: height,
+          width: width * 0.870,
+          margin: EdgeInsets.symmetric(
+            horizontal: width * 0.065,
+          ),
+          child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) => Container(
+              padding:
+                  index == 0 ? const EdgeInsets.only(top: 70) : EdgeInsets.zero,
+              margin: const EdgeInsets.symmetric(vertical: 6),
+              child: Stack(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    height: 147,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 18, left: 15),
+                    child: Text(
+                      "Labortornaya",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 23,
+                        fontWeight: FontWeight.w500,
+                        color: const Color.fromRGBO(2, 36, 111, 1),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 41, left: 15),
+                    child: Text(
+                      "The numbers from the textbook\nAntiDemidovich\n13.5, 13.6, 15.1, 18.1-5",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: const Color.fromRGBO(2, 36, 111, 1),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 11),
+                      width: 17,
+                      height: 17,
+                      decoration: BoxDecoration(
+                          color: const Color.fromRGBO(69, 239, 54, 1),
+                          border: Border.all(color: Colors.white, width: 2.5),
+                          borderRadius: BorderRadius.circular(9)),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 34),
+                      width: 17,
+                      height: 17,
+                      decoration: BoxDecoration(
+                          color: const Color.fromRGBO(255, 33, 219, 1),
+                          border: Border.all(color: Colors.white, width: 2.5),
+                          borderRadius: BorderRadius.circular(9)),
+                      child: const Icon(Icons.priority_high_rounded,
+                          size: 8, color: Colors.white),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 124, left: 15),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 1, horizontal: 7),
+                    decoration: BoxDecoration(
+                        color: const Color.fromRGBO(182, 211, 255, 1),
+                        borderRadius: BorderRadius.circular(3)),
+                    child: Text(
+                      "#algebra",
+                      style: GoogleFonts.montserrat(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: const Color.fromRGBO(27, 118, 253, 1)),
+                    ),
+                  ),
+                  Builder(builder: (BuildContext context) {
+                    if (index % 3 == 0) {
+                      return Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 23, right: 10),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 1, horizontal: 7),
+                          decoration: BoxDecoration(
+                              color: const Color.fromRGBO(255, 208, 182, 1),
+                              borderRadius: BorderRadius.circular(3)),
+                          child: Text(
+                            "Task not completed",
+                            style: GoogleFonts.montserrat(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: const Color.fromRGBO(220, 79, 0, 1)),
+                          ),
+                        ),
+                      );
+                    } else if (index % 3 == 1) {
+                      return Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 23, right: 10),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 1, horizontal: 7),
+                          decoration: BoxDecoration(
+                              color: const Color.fromRGBO(254, 255, 182, 1),
+                              borderRadius: BorderRadius.circular(3)),
+                          child: Text(
+                            "Task canceled",
+                            style: GoogleFonts.montserrat(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: const Color.fromRGBO(220, 211, 0, 1)),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 23, right: 10),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 1, horizontal: 7),
+                          decoration: BoxDecoration(
+                              color: const Color.fromRGBO(182, 255, 198, 1),
+                              borderRadius: BorderRadius.circular(3)),
+                          child: Text(
+                            "Task completed",
+                            style: GoogleFonts.montserrat(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: const Color.fromRGBO(0, 220, 62, 1)),
+                          ),
+                        ),
+                      );
+                    }
+                  }),
+                ],
+              ),
+            ),
+            itemCount: 10,
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: const Color.fromRGBO(61, 68, 231, 1),
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.5),
+                spreadRadius: 0,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          margin: EdgeInsets.symmetric(horizontal: width * 0.041),
+          height: 51,
+          width: width * 0.918,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 4, left: 22),
+                child: Text(
+                  "Task story",
+                  style: GoogleFonts.montserrat(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white),
+                ),
+              ),
+              Container(
+                alignment: Alignment.topRight,
+                margin: EdgeInsets.only(top: 12, right: 24),
+                child: Text(
+                  "32",
+                  style: GoogleFonts.montserrat(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white),
+                ),
+              ),
+            ],
           ),
         )
       ],
