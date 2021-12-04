@@ -1,115 +1,327 @@
+import 'dart:convert';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+Image imageFromBase64String(String base64String) {
+  return Image.memory(base64Decode(base64String));
+}
 
 void main() {
-  runApp(const MyApp());
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    initialRoute: '/signup',
+    routes: {
+      '/signup': (context) => const SignUpPage(),
+      '/signin': (context) => const SignInPage(),
+    },
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  _SignUpPageState createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    return KeyboardVisibilityBuilder(builder: (context, visible) {
+      return Scaffold(
+        body: Container(
+          width: width,
+          height: height,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.fromRGBO(3, 64, 156, 1),
+                Color.fromRGBO(1, 0, 54, 1),
+              ],
+            ),
+          ),
+          child: Column(
+            children: [
+              Container(
+                alignment: Alignment.topCenter,
+                padding: EdgeInsets.only(top: height * 0.2),
+                width: width * 0.4,
+                child: SvgPicture.asset('/image/logo.svg'),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 23),
+                child: GestureDetector(
+                  onTap: () => {Navigator.pushNamed(context, '/signin')},
+                  child: RichText(
+                    textDirection: TextDirection.ltr,
+                    text: TextSpan(
+                      text: "Already have an account? ",
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w300,
+                        color: Colors.white.withOpacity(0.6),
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: "Sign in",
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: height * 0.23),
+                width: width * 0.86,
+                child: Column(
+                  children: [
+                    Container(
+                      height: 37,
+                      decoration: BoxDecoration(
+                          color: const Color.fromRGBO(255, 255, 255, 0.09),
+                          borderRadius: BorderRadius.circular(5.37)),
+                      child: TextFormField(
+                        initialValue: '',
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Email',
+                          hintStyle: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w400,
+                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding:
+                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 4.3),
+                      height: 37,
+                      decoration: BoxDecoration(
+                          color: const Color.fromRGBO(255, 255, 255, 0.09),
+                          borderRadius: BorderRadius.circular(5.37)),
+                      child: TextFormField(
+                        initialValue: '',
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Create password',
+                          hintStyle: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w400,
+                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding:
+                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 4.3),
+                      height: 37,
+                      decoration: BoxDecoration(
+                          color: const Color.fromRGBO(255, 255, 255, 0.09),
+                          borderRadius: BorderRadius.circular(5.37)),
+                      child: TextFormField(
+                        initialValue: '',
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Repeat password',
+                          hintStyle: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w400,
+                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding:
+                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: width * 0.86,
+                      height: 48.37,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.37),
+                        color: const Color.fromRGBO(48, 35, 174, 1),
+                      ),
+                      margin: const EdgeInsets.only(top: 9),
+                      child: GestureDetector(
+                        onTap: () => {},
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Register",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.montserrat(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
     });
   }
+}
+
+class SignInPage extends StatefulWidget {
+  const SignInPage({Key? key}) : super(key: key);
+
+  @override
+  _SignInPageState createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  bool isOpen = false;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: Container(
+        width: width,
+        height: height,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromRGBO(3, 64, 156, 1),
+              Color.fromRGBO(1, 0, 54, 1),
+            ],
+          ),
+        ),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+          children: [
+            Container(
+              alignment: Alignment.topCenter,
+              padding: EdgeInsets.only(top: height * 0.2),
+              width: width * 0.4,
+              child: SvgPicture.asset('/image/logo.svg'),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            Container(
+              margin: const EdgeInsets.only(top: 23),
+              child: GestureDetector(
+                onTap: () => {},
+                child: Text(
+                  'It`s good to see you again!',
+                  style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w300,
+                    color: Colors.white.withOpacity(0.6),
+                  ),
+                ),
+              ),
             ),
+            Container(
+              margin: EdgeInsets.only(top: height * 0.3),
+              width: width * 0.86,
+              child: Column(
+                children: [
+                  Container(
+                    height: 37,
+                    decoration: BoxDecoration(
+                        color: const Color.fromRGBO(255, 255, 255, 0.09),
+                        borderRadius: BorderRadius.circular(5.37)),
+                    child: TextFormField(
+                      initialValue: '',
+                      style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w400,
+                          color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Email',
+                        hintStyle: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                        contentPadding:
+                            const EdgeInsets.only(left: 14.5, bottom: 9),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 4.3),
+                    height: 37,
+                    decoration: BoxDecoration(
+                        color: const Color.fromRGBO(255, 255, 255, 0.09),
+                        borderRadius: BorderRadius.circular(5.37)),
+                    child: TextFormField(
+                      initialValue: '',
+                      style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w400,
+                          color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Create password',
+                        hintStyle: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                        contentPadding:
+                            const EdgeInsets.only(left: 14.5, bottom: 9),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: width * 0.86,
+                    height: 48.37,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.37),
+                      color: const Color.fromRGBO(48, 35, 174, 1),
+                    ),
+                    margin: const EdgeInsets.only(top: 9),
+                    child: GestureDetector(
+                      onTap: () => {},
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Sign In",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              alignment: Alignment.topLeft,
+              margin: EdgeInsets.only(top: 36, left: width * 0.07),
+              child: GestureDetector(
+                onTap: () => {Navigator.pop(context)},
+                child: Text(
+                  'Back',
+                  style:
+                      GoogleFonts.montserrat(color: Colors.white, fontSize: 16),
+                ),
+              ),
+            )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
