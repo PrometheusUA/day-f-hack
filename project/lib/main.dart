@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
