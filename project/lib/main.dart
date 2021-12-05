@@ -5,6 +5,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:math';
+import 'package:http/http.dart' as http;
 
 Image imageFromBase64String(String base64String) {
   return Image.memory(base64Decode(base64String));
@@ -18,9 +22,11 @@ void main() {
       routes: {
         '/signup': (context) => const SignUpPage(),
         '/signin': (context) => const SignInPage(),
-        '/signintwo': (context) => const SignUpPageTwo(),
+        '/signuptwo': (context) => const SignUpPageTwo(),
         '/home': (context) => const HomePage(),
-        '/addevent': (context) => const AddEventPage()
+        '/addevent': (context) => const AddEventPage(),
+        '/addevent2': (context) => const AddEventPage2(),
+        '/eventnote': (context) => const EventNotePage(),
       },
       theme: ThemeData(),
     ),
@@ -35,6 +41,26 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  String email = "";
+  String password = "";
+  String confirmpassword = "";
+  int status = 0;
+
+  void click() {
+    status = 0;
+    if (email == "" || password == "" || confirmpassword == "") {
+    } else if (password != confirmpassword) {
+      status = 2;
+    } else if (email.contains(' ') || !email.contains('@')) {
+      status = 1;
+    } else if (password.length < 8) {
+      status = 3;
+    } else {
+      Navigator.pushNamed(context, '/signuptwo', arguments: [email, password]);
+    }
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -42,8 +68,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).viewInsets.bottom;
+    double height = MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom;
     double width = MediaQuery.of(context).size.width;
     return KeyboardVisibilityBuilder(builder: (context1, visible) {
       return Scaffold(
@@ -111,22 +136,21 @@ class _SignUpPageState extends State<SignUpPage> {
                     //#region Email
                     Container(
                       height: 37,
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(255, 255, 255, 0.09),
-                          borderRadius: BorderRadius.circular(5.37)),
+                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
                       child: TextFormField(
                         initialValue: '',
-                        style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w400,
-                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        onChanged: (value) => setState(() {
+                          email = value;
+                          status = 0;
+                        }),
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
                         decoration: InputDecoration(
                           border: InputBorder.none,
+                          errorText: status == 1 ? "incorect email" : null,
+                          errorStyle: const TextStyle(fontSize: 8),
                           hintText: 'Email',
-                          hintStyle: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
-                          contentPadding:
-                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                          hintStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding: const EdgeInsets.only(left: 14.5, bottom: 9),
                         ),
                       ),
                     ),
@@ -135,22 +159,20 @@ class _SignUpPageState extends State<SignUpPage> {
                     Container(
                       margin: const EdgeInsets.only(top: 4.3),
                       height: 37,
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(255, 255, 255, 0.09),
-                          borderRadius: BorderRadius.circular(5.37)),
+                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
                       child: TextFormField(
                         initialValue: '',
-                        style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w400,
-                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        onChanged: (value) => setState(() {
+                          password = value;
+                          status = 0;
+                        }),
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
                         decoration: InputDecoration(
                           border: InputBorder.none,
+                          errorText: status == 3 ? "password must be at least 8 characters" : null,
                           hintText: 'Create password',
-                          hintStyle: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
-                          contentPadding:
-                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                          hintStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding: const EdgeInsets.only(left: 14.5, top: -7),
                         ),
                       ),
                     ),
@@ -159,22 +181,21 @@ class _SignUpPageState extends State<SignUpPage> {
                     Container(
                       margin: const EdgeInsets.only(top: 4.3),
                       height: 37,
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(255, 255, 255, 0.09),
-                          borderRadius: BorderRadius.circular(5.37)),
+                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
                       child: TextFormField(
                         initialValue: '',
-                        style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w400,
-                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        onChanged: (value) => setState(() {
+                          confirmpassword = value;
+                          status = 0;
+                        }),
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
                         decoration: InputDecoration(
                           border: InputBorder.none,
+                          errorText: status == 2 ? "password do not match" : null,
+                          errorStyle: TextStyle(fontSize: 8),
                           hintText: 'Repeat password',
-                          hintStyle: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
-                          contentPadding:
-                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                          hintStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding: const EdgeInsets.only(left: 14.5, top: -7),
                         ),
                       ),
                     ),
@@ -190,7 +211,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       margin: const EdgeInsets.only(top: 9),
                       child: GestureDetector(
                         behavior: HitTestBehavior.opaque,
-                        onTap: () => Navigator.pushNamed(context, '/signintwo'),
+                        onTap: () => click(),
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
@@ -222,10 +243,34 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  String email = "";
+  String password = "";
+  int status = 0;
+
+  void SignUp() async {
+    status = 0;
+    var response = await http.post(
+      Uri.parse('https://fastapihackatonapi.herokuapp.com/auth/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'email': email,
+          'password': password,
+        },
+      ),
+    );
+    if (response.statusCode == 401) {
+      status = 1;
+    } else {
+      Navigator.pushNamed(context, "/home", arguments: [jsonDecode(response.body)['access_token']]);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).viewInsets.bottom;
+    double height = MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom;
     double width = MediaQuery.of(context).size.width;
     return KeyboardVisibilityBuilder(builder: (context1, visible) {
       return Scaffold(
@@ -276,22 +321,21 @@ class _SignInPageState extends State<SignInPage> {
                     //#region Email
                     Container(
                       height: 37,
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(255, 255, 255, 0.09),
-                          borderRadius: BorderRadius.circular(5.37)),
+                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
                       child: TextFormField(
                         initialValue: '',
-                        style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w400,
-                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        onChanged: (value) {
+                          setState(() {
+                            email = value;
+                            status = 0;
+                          });
+                        },
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Email',
-                          hintStyle: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
-                          contentPadding:
-                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                          hintStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding: const EdgeInsets.only(left: 14.5, bottom: 9),
                         ),
                       ),
                     ),
@@ -300,22 +344,19 @@ class _SignInPageState extends State<SignInPage> {
                     Container(
                       margin: const EdgeInsets.only(top: 4.3),
                       height: 37,
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(255, 255, 255, 0.09),
-                          borderRadius: BorderRadius.circular(5.37)),
+                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
                       child: TextFormField(
                         initialValue: '',
-                        style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w400,
-                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        onChanged: (value) => setState(() {
+                          password = value;
+                          status = 0;
+                        }),
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Create password',
-                          hintStyle: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
-                          contentPadding:
-                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                          hintStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding: const EdgeInsets.only(left: 14.5, bottom: 9),
                         ),
                       ),
                     ),
@@ -330,7 +371,10 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                       margin: const EdgeInsets.only(top: 9),
                       child: GestureDetector(
-                        onTap: () => Navigator.of(context).pushNamed("/home"),
+                        onTap: () {
+                          SignUp();
+                          setState(() {});
+                        },
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
@@ -340,8 +384,19 @@ class _SignInPageState extends State<SignInPage> {
                           ),
                         ),
                       ),
-                    )
+                    ),
                     //#endregion
+                    Visibility(
+                      visible: status == 1,
+                      child: Container(
+                        margin: EdgeInsets.only(top: 5),
+                        alignment: Alignment.topCenter,
+                        child: Text(
+                          "Incorrect email or password",
+                          style: GoogleFonts.montserrat(fontSize: 10, color: Colors.red),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -353,8 +408,7 @@ class _SignInPageState extends State<SignInPage> {
                   onTap: () => {Navigator.pop(context)},
                   child: Text(
                     'Back',
-                    style: GoogleFonts.montserrat(
-                        color: Colors.white, fontSize: 16),
+                    style: GoogleFonts.montserrat(color: Colors.white, fontSize: 16),
                   ),
                 ),
               ),
@@ -376,11 +430,52 @@ class SignUpPageTwo extends StatefulWidget {
 }
 
 class _SignInTwoPageState extends State<SignUpPageTwo> {
+  String email = "";
+  String password = "";
+  String firstname = "";
+  String lastname = "";
+  String username = "";
+  String job = "";
+  int status = 0;
+
+  void Regestration() async {
+    if (username.trim() == "") {
+      status = 1;
+    } else if (username.contains(" ")) {
+      status = 2;
+    } else {
+      var response = await http.post(
+        Uri.parse('https://fastapihackatonapi.herokuapp.com/auth/register'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+          <String, String>{
+            'email': email,
+            'password': password,
+            'username': username + "${Random().nextInt(9999)}",
+            'job': job,
+            'first_name': firstname,
+            'last_name': lastname
+          },
+        ),
+      );
+      if (response.statusCode == 409) {
+        Navigator.pop(context);
+      } else {
+        Navigator.pushNamed(context, "/home", arguments: [jsonDecode(response.body)['access_token']]);
+      }
+    }
+  }
+
   String type = 'Student';
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).viewInsets.bottom;
+    final args = ModalRoute.of(context)!.settings.arguments as List;
+    email = args[0];
+    password = args[1];
+
+    double height = MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom;
     double width = MediaQuery.of(context).size.width;
     return KeyboardVisibilityBuilder(builder: (context1, visible) {
       return Scaffold(
@@ -442,9 +537,7 @@ class _SignInTwoPageState extends State<SignUpPageTwo> {
                       height: 37,
                       width: width * 0.86,
                       padding: const EdgeInsets.only(left: 14.33),
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(255, 255, 255, 0.09),
-                          borderRadius: BorderRadius.circular(5.37)),
+                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
                       child: IgnorePointer(
                         ignoring: true,
                         child: DropdownButton<String>(
@@ -454,9 +547,7 @@ class _SignInTwoPageState extends State<SignUpPageTwo> {
                           icon: Expanded(
                             child: Container(
                               padding: const EdgeInsets.only(right: 6),
-                              child: const Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Icon(Icons.arrow_drop_down)),
+                              child: const Align(alignment: Alignment.centerRight, child: Icon(Icons.arrow_drop_down)),
                             ),
                           ),
                           iconSize: 24,
@@ -471,8 +562,7 @@ class _SignInTwoPageState extends State<SignUpPageTwo> {
                               type = newValue!;
                             });
                           },
-                          items: <String>['Student', 'Teacher', 'Other']
-                              .map<DropdownMenuItem<String>>((String value) {
+                          items: <String>['Student', 'Teacher', 'Other'].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(value),
@@ -486,22 +576,19 @@ class _SignInTwoPageState extends State<SignUpPageTwo> {
                     Container(
                       margin: const EdgeInsets.only(top: 4.3),
                       height: 37,
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(255, 255, 255, 0.09),
-                          borderRadius: BorderRadius.circular(5.37)),
+                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
                       child: TextFormField(
                         initialValue: '',
-                        style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w400,
-                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        onChanged: (value) => setState(() {
+                          firstname = value;
+                          status = 0;
+                        }),
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'First Name',
-                          hintStyle: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
-                          contentPadding:
-                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                          hintStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding: const EdgeInsets.only(left: 14.5, bottom: 9),
                         ),
                       ),
                     ),
@@ -510,22 +597,19 @@ class _SignInTwoPageState extends State<SignUpPageTwo> {
                     Container(
                       margin: const EdgeInsets.only(top: 4.3),
                       height: 37,
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(255, 255, 255, 0.09),
-                          borderRadius: BorderRadius.circular(5.37)),
+                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
                       child: TextFormField(
                         initialValue: '',
-                        style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w400,
-                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        onChanged: (value) => setState(() {
+                          lastname = value;
+                          status = 0;
+                        }),
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Last Name',
-                          hintStyle: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
-                          contentPadding:
-                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                          hintStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding: const EdgeInsets.only(left: 14.5, bottom: 9),
                         ),
                       ),
                     ),
@@ -534,22 +618,24 @@ class _SignInTwoPageState extends State<SignUpPageTwo> {
                     Container(
                       margin: const EdgeInsets.only(top: 4.3),
                       height: 37,
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(255, 255, 255, 0.09),
-                          borderRadius: BorderRadius.circular(5.37)),
+                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
                       child: TextFormField(
                         initialValue: '',
-                        style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w400,
-                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        onChanged: (value) => setState(() {
+                          username = value;
+                          status = 0;
+                        }),
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
                         decoration: InputDecoration(
                           border: InputBorder.none,
+                          errorText: status == 1
+                              ? "enter username"
+                              : status == 2
+                                  ? "incorrect username"
+                                  : null,
                           hintText: 'Create username',
-                          hintStyle: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
-                          contentPadding:
-                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                          hintStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding: const EdgeInsets.only(left: 14.5, bottom: 9),
                         ),
                       ),
                     ),
@@ -564,7 +650,7 @@ class _SignInTwoPageState extends State<SignUpPageTwo> {
                       ),
                       margin: const EdgeInsets.only(top: 9),
                       child: GestureDetector(
-                        onTap: () => Navigator.of(context).pushNamed("/home"),
+                        onTap: () => Regestration(),
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
@@ -601,6 +687,8 @@ class _HomePageState extends State<HomePage> {
   int index = 0;
   @override
   Widget build(BuildContext context) {
+    String token = (ModalRoute.of(context)!.settings.arguments as List)[0];
+
     PageController controller = PageController(initialPage: index);
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
@@ -648,8 +736,7 @@ class _HomePageState extends State<HomePage> {
               margin: const EdgeInsets.only(top: 31, right: 22),
               width: 38,
               height: 38,
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(19)),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(19)),
               child: Image.asset("assets/image/acc.png"),
             )
           ],
@@ -681,23 +768,16 @@ class _HomePageState extends State<HomePage> {
                   height: 45,
                   width: 45,
                   decoration: BoxDecoration(
-                      color: index == 0
-                          ? const Color.fromRGBO(61, 68, 231, 1)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(12)),
+                      color: index == 0 ? const Color.fromRGBO(61, 68, 231, 1) : Colors.transparent, borderRadius: BorderRadius.circular(12)),
                   child: Icon(
                     Icons.home_rounded,
-                    color: index == 0
-                        ? Colors.white
-                        : const Color.fromRGBO(209, 209, 209, 1),
+                    color: index == 0 ? Colors.white : const Color.fromRGBO(209, 209, 209, 1),
                   ),
                 ),
                 onTap: () => setState(
                   () {
                     index = 0;
-                    controller.animateToPage(index,
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.easeIn);
+                    controller.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
                   },
                 ),
               ),
@@ -708,23 +788,16 @@ class _HomePageState extends State<HomePage> {
                   width: 45,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: index == 1
-                          ? const Color.fromRGBO(61, 68, 231, 1)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(12)),
+                      color: index == 1 ? const Color.fromRGBO(61, 68, 231, 1) : Colors.transparent, borderRadius: BorderRadius.circular(12)),
                   child: SvgPicture.asset(
                     "assets/image/menu.svg",
-                    color: index == 1
-                        ? Colors.white
-                        : const Color.fromRGBO(209, 209, 209, 1),
+                    color: index == 1 ? Colors.white : const Color.fromRGBO(209, 209, 209, 1),
                   ),
                 ),
                 onTap: () => setState(
                   () {
                     index = 1;
-                    controller.animateToPage(index,
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeIn);
+                    controller.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                   },
                 ),
               ),
@@ -735,15 +808,10 @@ class _HomePageState extends State<HomePage> {
                   width: 45,
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: index == 2
-                          ? const Color.fromRGBO(61, 68, 231, 1)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(12)),
+                      color: index == 2 ? const Color.fromRGBO(61, 68, 231, 1) : Colors.transparent, borderRadius: BorderRadius.circular(12)),
                   child: SvgPicture.asset(
                     "assets/image/menu3.svg",
-                    color: index == 2
-                        ? Colors.white
-                        : const Color.fromRGBO(209, 209, 209, 1),
+                    color: index == 2 ? Colors.white : const Color.fromRGBO(209, 209, 209, 1),
                     height: 26,
                     width: 26,
                   ),
@@ -751,9 +819,7 @@ class _HomePageState extends State<HomePage> {
                 onTap: () => setState(
                   () {
                     index = 2;
-                    controller.animateToPage(index,
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeIn);
+                    controller.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                   },
                 ),
               ),
@@ -809,9 +875,7 @@ class _Home1PageState extends State<Home1Page> {
                           alignment: Alignment.center,
                           height: 93,
                           width: 67,
-                          decoration: BoxDecoration(
-                              color: const Color.fromRGBO(0, 0, 0, 0.24),
-                              borderRadius: BorderRadius.circular(13)),
+                          decoration: BoxDecoration(color: const Color.fromRGBO(0, 0, 0, 0.24), borderRadius: BorderRadius.circular(13)),
                           child: const Icon(
                             Icons.add,
                             size: 24,
@@ -888,14 +952,9 @@ class _Home1PageState extends State<Home1Page> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Icon(Icons.schedule_rounded,
-                                      color: Colors.white, size: 10),
+                                  const Icon(Icons.schedule_rounded, color: Colors.white, size: 10),
                                   const SizedBox(width: 3),
-                                  Text("7d:8Hr",
-                                      style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 14,
-                                          color: Colors.white))
+                                  Text("7d:8Hr", style: GoogleFonts.montserrat(fontWeight: FontWeight.w700, fontSize: 14, color: Colors.white))
                                 ],
                               ),
                             ),
@@ -918,8 +977,7 @@ class _Home1PageState extends State<Home1Page> {
                                   color: const Color.fromRGBO(255, 33, 219, 1),
                                   border: Border.all(color: Colors.white),
                                   borderRadius: BorderRadius.circular(5.5)),
-                              child: const Icon(Icons.priority_high_rounded,
-                                  size: 6, color: Colors.white),
+                              child: const Icon(Icons.priority_high_rounded, size: 6, color: Colors.white),
                             )
                           ],
                         ),
@@ -947,12 +1005,16 @@ class _Home1PageState extends State<Home1Page> {
             itemCount: 11,
           ),
         ),
-        SizedBox(
-          height: height * 0.04,
+        Visibility(
+          visible: height > 820,
+          child: const Spacer(
+            flex: 1,
+          ),
         ),
         Visibility(
           visible: height > 820,
           child: Flexible(
+            flex: 4,
             child: Container(
               width: width * 0.875,
               decoration: BoxDecoration(
@@ -993,8 +1055,7 @@ class _Home1PageState extends State<Home1Page> {
                   ),
                   Container(
                     alignment: Alignment.bottomLeft,
-                    margin:
-                        const EdgeInsets.only(bottom: 21, left: 21, right: 21),
+                    margin: const EdgeInsets.only(bottom: 21, left: 21, right: 21),
                     child: Text(
                       "Phrase of the day:\nЕврей не делает репосты потому что у него нет кнопки поделиться.",
                       style: GoogleFonts.montserrat(
@@ -1009,12 +1070,12 @@ class _Home1PageState extends State<Home1Page> {
             ),
           ),
         ),
-        SizedBox(
-          height: height * 0.04,
+        const Spacer(
+          flex: 1,
         ),
         Flexible(
+          flex: 4,
           child: Container(
-            constraints: const BoxConstraints(maxHeight: 230),
             width: width * 0.875,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
@@ -1091,8 +1152,8 @@ class _Home1PageState extends State<Home1Page> {
             ),
           ),
         ),
-        SizedBox(
-          height: height * 0.04,
+        const Spacer(
+          flex: 1,
         ),
       ],
     );
@@ -1124,9 +1185,7 @@ class _Home2PageState extends State<Home2Page> {
             itemBuilder: (context, index) {
               if (index != 5) {
                 return Container(
-                  padding: index == 0
-                      ? const EdgeInsets.only(top: 70)
-                      : EdgeInsets.zero,
+                  padding: index == 0 ? const EdgeInsets.only(top: 70) : EdgeInsets.zero,
                   margin: const EdgeInsets.symmetric(vertical: 6),
                   child: Stack(
                     children: [
@@ -1168,8 +1227,7 @@ class _Home2PageState extends State<Home2Page> {
                           height: 17,
                           decoration: BoxDecoration(
                               color: const Color.fromRGBO(69, 239, 54, 1),
-                              border:
-                                  Border.all(color: Colors.white, width: 2.5),
+                              border: Border.all(color: Colors.white, width: 2.5),
                               borderRadius: BorderRadius.circular(9)),
                         ),
                       ),
@@ -1181,26 +1239,18 @@ class _Home2PageState extends State<Home2Page> {
                           height: 17,
                           decoration: BoxDecoration(
                               color: const Color.fromRGBO(255, 33, 219, 1),
-                              border:
-                                  Border.all(color: Colors.white, width: 2.5),
+                              border: Border.all(color: Colors.white, width: 2.5),
                               borderRadius: BorderRadius.circular(9)),
-                          child: const Icon(Icons.priority_high_rounded,
-                              size: 8, color: Colors.white),
+                          child: const Icon(Icons.priority_high_rounded, size: 8, color: Colors.white),
                         ),
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 115, left: 15),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 1, horizontal: 7),
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(182, 211, 255, 1),
-                            borderRadius: BorderRadius.circular(3)),
+                        padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 7),
+                        decoration: BoxDecoration(color: const Color.fromRGBO(182, 211, 255, 1), borderRadius: BorderRadius.circular(3)),
                         child: Text(
                           "#algebra Tuesday Denisenko",
-                          style: GoogleFonts.montserrat(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: const Color.fromRGBO(27, 118, 253, 1)),
+                          style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w600, color: const Color.fromRGBO(27, 118, 253, 1)),
                         ),
                       ),
                       Container(
@@ -1209,25 +1259,16 @@ class _Home2PageState extends State<Home2Page> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 1, horizontal: 21),
-                              decoration: BoxDecoration(
-                                  color: const Color.fromRGBO(182, 255, 198, 1),
-                                  borderRadius: BorderRadius.circular(3)),
+                              padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 21),
+                              decoration: BoxDecoration(color: const Color.fromRGBO(182, 255, 198, 1), borderRadius: BorderRadius.circular(3)),
                               child: Text(
                                 "task done",
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: const Color.fromRGBO(0, 220, 62, 1)),
+                                style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w600, color: const Color.fromRGBO(0, 220, 62, 1)),
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 1, horizontal: 21),
-                              decoration: BoxDecoration(
-                                  color: const Color.fromRGBO(254, 255, 182, 1),
-                                  borderRadius: BorderRadius.circular(3)),
+                              padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 21),
+                              decoration: BoxDecoration(color: const Color.fromRGBO(254, 255, 182, 1), borderRadius: BorderRadius.circular(3)),
                               child: Text(
                                 "cancel task",
                                 style: GoogleFonts.montserrat(
@@ -1244,11 +1285,7 @@ class _Home2PageState extends State<Home2Page> {
                                   size: 10,
                                   color: Color.fromRGBO(69, 239, 54, 1),
                                 ),
-                                Text("7d:8Hr",
-                                    style: GoogleFonts.roboto(
-                                        fontWeight: FontWeight.w400,
-                                        color: const Color.fromRGBO(
-                                            69, 239, 54, 1)))
+                                Text("7d:8Hr", style: GoogleFonts.roboto(fontWeight: FontWeight.w400, color: const Color.fromRGBO(69, 239, 54, 1)))
                               ],
                             )
                           ],
@@ -1302,14 +1339,12 @@ class _Home2PageState extends State<Home2Page> {
                                 width: 2.5,
                               ),
                               borderRadius: BorderRadius.circular(9)),
-                          child: const Icon(Icons.priority_high_rounded,
-                              size: 8, color: Colors.white),
+                          child: const Icon(Icons.priority_high_rounded, size: 8, color: Colors.white),
                         ),
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 140, left: 15),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 1, horizontal: 15),
+                        padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 15),
                         decoration: BoxDecoration(
                           color: const Color.fromRGBO(250, 252, 173, 1),
                           borderRadius: BorderRadius.circular(3),
@@ -1318,17 +1353,13 @@ class _Home2PageState extends State<Home2Page> {
                               color: Color.fromRGBO(250, 252, 173, 1),
                               spreadRadius: 0,
                               blurRadius: 7,
-                              offset:
-                                  Offset(0, 1), // changes position of shadow
+                              offset: Offset(0, 1), // changes position of shadow
                             ),
                           ],
                         ),
                         child: Text(
                           "Time to rest",
-                          style: GoogleFonts.montserrat(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: const Color.fromRGBO(228, 193, 7, 1)),
+                          style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w600, color: const Color.fromRGBO(228, 193, 7, 1)),
                         ),
                       ),
                     ],
@@ -1358,10 +1389,7 @@ class _Home2PageState extends State<Home2Page> {
           child: Center(
             child: Text(
               "Your upcoming deadlines",
-              style: GoogleFonts.montserrat(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white),
+              style: GoogleFonts.montserrat(fontSize: 28, fontWeight: FontWeight.w400, color: Colors.white),
             ),
           ),
         )
@@ -1393,8 +1421,7 @@ class _Home3PageState extends State<Home3Page> {
           child: ListView.builder(
             scrollDirection: Axis.vertical,
             itemBuilder: (context, index) => Container(
-              padding:
-                  index == 0 ? const EdgeInsets.only(top: 70) : EdgeInsets.zero,
+              padding: index == 0 ? const EdgeInsets.only(top: 70) : EdgeInsets.zero,
               margin: const EdgeInsets.symmetric(vertical: 6),
               child: Stack(
                 children: [
@@ -1450,23 +1477,16 @@ class _Home3PageState extends State<Home3Page> {
                           color: const Color.fromRGBO(255, 33, 219, 1),
                           border: Border.all(color: Colors.white, width: 2.5),
                           borderRadius: BorderRadius.circular(9)),
-                      child: const Icon(Icons.priority_high_rounded,
-                          size: 8, color: Colors.white),
+                      child: const Icon(Icons.priority_high_rounded, size: 8, color: Colors.white),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 124, left: 15),
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 1, horizontal: 7),
-                    decoration: BoxDecoration(
-                        color: const Color.fromRGBO(182, 211, 255, 1),
-                        borderRadius: BorderRadius.circular(3)),
+                    padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 7),
+                    decoration: BoxDecoration(color: const Color.fromRGBO(182, 211, 255, 1), borderRadius: BorderRadius.circular(3)),
                     child: Text(
                       "#algebra",
-                      style: GoogleFonts.montserrat(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: const Color.fromRGBO(27, 118, 253, 1)),
+                      style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: const Color.fromRGBO(27, 118, 253, 1)),
                     ),
                   ),
                   Builder(builder: (BuildContext context) {
@@ -1475,17 +1495,11 @@ class _Home3PageState extends State<Home3Page> {
                         alignment: Alignment.topRight,
                         child: Container(
                           margin: const EdgeInsets.only(top: 23, right: 10),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 1, horizontal: 7),
-                          decoration: BoxDecoration(
-                              color: const Color.fromRGBO(255, 208, 182, 1),
-                              borderRadius: BorderRadius.circular(3)),
+                          padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 7),
+                          decoration: BoxDecoration(color: const Color.fromRGBO(255, 208, 182, 1), borderRadius: BorderRadius.circular(3)),
                           child: Text(
                             "Task not completed",
-                            style: GoogleFonts.montserrat(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: const Color.fromRGBO(220, 79, 0, 1)),
+                            style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: const Color.fromRGBO(220, 79, 0, 1)),
                           ),
                         ),
                       );
@@ -1494,17 +1508,11 @@ class _Home3PageState extends State<Home3Page> {
                         alignment: Alignment.topRight,
                         child: Container(
                           margin: const EdgeInsets.only(top: 23, right: 10),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 1, horizontal: 7),
-                          decoration: BoxDecoration(
-                              color: const Color.fromRGBO(254, 255, 182, 1),
-                              borderRadius: BorderRadius.circular(3)),
+                          padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 7),
+                          decoration: BoxDecoration(color: const Color.fromRGBO(254, 255, 182, 1), borderRadius: BorderRadius.circular(3)),
                           child: Text(
                             "Task canceled",
-                            style: GoogleFonts.montserrat(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: const Color.fromRGBO(220, 211, 0, 1)),
+                            style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: const Color.fromRGBO(220, 211, 0, 1)),
                           ),
                         ),
                       );
@@ -1513,17 +1521,11 @@ class _Home3PageState extends State<Home3Page> {
                         alignment: Alignment.topRight,
                         child: Container(
                           margin: const EdgeInsets.only(top: 23, right: 10),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 1, horizontal: 7),
-                          decoration: BoxDecoration(
-                              color: const Color.fromRGBO(182, 255, 198, 1),
-                              borderRadius: BorderRadius.circular(3)),
+                          padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 7),
+                          decoration: BoxDecoration(color: const Color.fromRGBO(182, 255, 198, 1), borderRadius: BorderRadius.circular(3)),
                           child: Text(
                             "Task completed",
-                            style: GoogleFonts.montserrat(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: const Color.fromRGBO(0, 220, 62, 1)),
+                            style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: const Color.fromRGBO(0, 220, 62, 1)),
                           ),
                         ),
                       );
@@ -1558,10 +1560,7 @@ class _Home3PageState extends State<Home3Page> {
                 margin: EdgeInsets.only(top: 4, left: 22),
                 child: Text(
                   "Task story",
-                  style: GoogleFonts.montserrat(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white),
+                  style: GoogleFonts.montserrat(fontSize: 28, fontWeight: FontWeight.w400, color: Colors.white),
                 ),
               ),
               Container(
@@ -1569,10 +1568,7 @@ class _Home3PageState extends State<Home3Page> {
                 margin: EdgeInsets.only(top: 12, right: 24),
                 child: Text(
                   "32",
-                  style: GoogleFonts.montserrat(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white),
+                  style: GoogleFonts.montserrat(fontSize: 28, fontWeight: FontWeight.w400, color: Colors.white),
                 ),
               ),
             ],
@@ -1593,8 +1589,7 @@ class AddEventPage extends StatefulWidget {
 class _AddEventPageState extends State<AddEventPage> {
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).viewInsets.bottom;
+    double height = MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom;
     double width = MediaQuery.of(context).size.width;
     return KeyboardVisibilityBuilder(builder: (context1, visible) {
       return Scaffold(
@@ -1647,42 +1642,32 @@ class _AddEventPageState extends State<AddEventPage> {
                     //#region Name
                     Container(
                       height: 37,
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(255, 255, 255, 0.09),
-                          borderRadius: BorderRadius.circular(5.37)),
+                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
                       child: TextFormField(
                         initialValue: '',
-                        style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w400,
-                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Event Name',
-                          hintStyle: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
-                          contentPadding:
-                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                          hintStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding: const EdgeInsets.only(left: 14.5, bottom: 9),
                         ),
                       ),
                     ),
                     //#endregion
                     //#region Note
                     GestureDetector(
+                      onTap: () => Navigator.pushNamed(context, '/eventnote'),
                       child: Container(
                         alignment: Alignment.bottomLeft,
                         margin: const EdgeInsets.only(top: 4.3),
                         padding: const EdgeInsets.only(left: 14.5, bottom: 9),
                         height: 37,
                         width: width * 0.86,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(255, 255, 255, 0.09),
-                            borderRadius: BorderRadius.circular(5.37)),
+                        decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
                         child: Text(
                           "Note",
-                          style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                          style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
                         ),
                       ),
                     ),
@@ -1691,14 +1676,10 @@ class _AddEventPageState extends State<AddEventPage> {
                     Container(
                       height: 37,
                       margin: const EdgeInsets.only(top: 4.3),
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(255, 255, 255, 0.09),
-                          borderRadius: BorderRadius.circular(5.37)),
+                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
                       child: TextFormField(
                         initialValue: '',
-                        style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w400,
-                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: '#Hashtags',
@@ -1706,41 +1687,31 @@ class _AddEventPageState extends State<AddEventPage> {
                             fontWeight: FontWeight.w400,
                             color: const Color.fromRGBO(255, 255, 255, 0.45),
                           ),
-                          contentPadding:
-                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                          contentPadding: const EdgeInsets.only(left: 14.5, bottom: 10, right: 12),
                           suffixText: 'one at least',
-                          suffixStyle: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          suffixStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
                         ),
                       ),
                     ),
                     //#endregion
-                    //#region Confirm password
+                    //#region Deadline
                     Container(
                       margin: const EdgeInsets.only(top: 4.3),
                       height: 37,
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(255, 255, 255, 0.09),
-                          borderRadius: BorderRadius.circular(5.37)),
+                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
                       child: TextFormField(
                         initialValue: '',
-                        style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w400,
-                            color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Deadline 11:59 00/00/0000',
-                          hintStyle: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(255, 255, 255, 0.45)),
-                          contentPadding:
-                              const EdgeInsets.only(left: 14.5, bottom: 9),
+                          hintText: 'Choose deadline time',
+                          hintStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding: const EdgeInsets.only(left: 14.5, bottom: 9),
                         ),
                       ),
                     ),
                     //#endregion
-                    //#region Register
+                    //#region Next
                     Container(
                       width: width * 0.86,
                       height: 48.37,
@@ -1751,7 +1722,7 @@ class _AddEventPageState extends State<AddEventPage> {
                       margin: const EdgeInsets.only(top: 9),
                       child: GestureDetector(
                         behavior: HitTestBehavior.opaque,
-                        onTap: () => Navigator.pushNamed(context, '/signintwo'),
+                        onTap: () => Navigator.pushNamed(context, '/addevent2'),
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
@@ -1767,6 +1738,490 @@ class _AddEventPageState extends State<AddEventPage> {
                 ),
               ),
               const Spacer(flex: 1),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+}
+
+class AddEventPage2 extends StatefulWidget {
+  const AddEventPage2({Key? key}) : super(key: key);
+
+  @override
+  _AddEventPage2State createState() => _AddEventPage2State();
+}
+
+class _AddEventPage2State extends State<AddEventPage2> {
+  @override
+  Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom;
+    double width = MediaQuery.of(context).size.width;
+    return KeyboardVisibilityBuilder(builder: (context1, visible) {
+      return Scaffold(
+        body: Container(
+          width: width,
+          height: height,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.fromRGBO(3, 64, 156, 1),
+                Color.fromRGBO(1, 0, 54, 1),
+              ],
+            ),
+          ),
+          child: Column(
+            children: [
+              const Spacer(flex: 1),
+              Column(
+                children: [
+                  //#region Logo
+                  Container(
+                    alignment: Alignment.topCenter,
+                    width: width * 0.4,
+                    child: SvgPicture.asset('assets/image/logo.svg'),
+                  ),
+                  //#endregion
+                  Visibility(
+                    visible: height > 350,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 23),
+                      child: Text(
+                        "The best solutions from the best team",
+                        style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w300,
+                          color: Colors.white.withOpacity(0.6),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              const Spacer(flex: 2),
+              Container(
+                alignment: Alignment.center,
+                width: width * 0.86,
+                child: Column(
+                  children: [
+                    //#region Name
+                    Container(
+                      height: 37,
+                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
+                      child: TextFormField(
+                        initialValue: '',
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Event Name',
+                          hintStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding: const EdgeInsets.only(left: 14.5, bottom: 9),
+                        ),
+                      ),
+                    ),
+                    //#endregion
+                    //#region Note
+                    GestureDetector(
+                      onTap: () => Navigator.pushNamed(context, '/eventnote'),
+                      child: Container(
+                        alignment: Alignment.bottomLeft,
+                        margin: const EdgeInsets.only(top: 4.3),
+                        padding: const EdgeInsets.only(left: 14.5, bottom: 9),
+                        height: 37,
+                        width: width * 0.86,
+                        decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
+                        child: Text(
+                          "Note",
+                          style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        ),
+                      ),
+                    ),
+                    //#endregion
+                    //#region Hashtags
+                    Container(
+                      height: 37,
+                      margin: const EdgeInsets.only(top: 4.3),
+                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
+                      child: TextFormField(
+                        initialValue: '',
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: '#Hashtags',
+                          hintStyle: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(255, 255, 255, 0.45),
+                          ),
+                          contentPadding: const EdgeInsets.only(left: 14.5, bottom: 10, right: 12),
+                          suffixText: 'one at least',
+                          suffixStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                        ),
+                      ),
+                    ),
+                    //#endregion
+                    //#region Deadline
+                    Container(
+                      margin: const EdgeInsets.only(top: 4.3),
+                      height: 37,
+                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
+                      child: TextFormField(
+                        initialValue: '',
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Choose deadline time',
+                          hintStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                          contentPadding: const EdgeInsets.only(left: 14.5, bottom: 9),
+                        ),
+                      ),
+                    ),
+                    //#endregion
+                    //#region Next
+                    Container(
+                      width: width * 0.86,
+                      height: 48.37,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.37),
+                        color: const Color.fromRGBO(48, 35, 174, 1),
+                      ),
+                      margin: const EdgeInsets.only(top: 9),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => Navigator.pushNamed(context, '/signuptwo'),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Next step",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.montserrat(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    )
+                    //#endregion
+                  ],
+                ),
+              ),
+              ExpansionTile(
+                children: [Text("h"),Text("h")],
+              ),
+              const Spacer(flex: 1),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+}
+
+class ExpansionTile extends StatefulWidget {
+  const ExpansionTile({
+    Key? key,
+    this.leading,
+    this.title,
+    this.subtitle,
+    this.onExpansionChanged,
+    this.children = const <Widget>[],
+    this.trailing,
+    this.initiallyExpanded = false,
+    this.maintainState = false,
+    this.tilePadding,
+    this.expandedCrossAxisAlignment,
+    this.expandedAlignment,
+    this.childrenPadding,
+    this.backgroundColor,
+    this.collapsedBackgroundColor,
+    this.textColor,
+    this.collapsedTextColor,
+    this.iconColor,
+    this.collapsedIconColor,
+    this.controlAffinity,
+  })  : assert(initiallyExpanded != null),
+        assert(maintainState != null),
+        assert(
+          expandedCrossAxisAlignment != CrossAxisAlignment.baseline,
+          'CrossAxisAlignment.baseline is not supported since the expanded children '
+          'are aligned in a column, not a row. Try to use another constant.',
+        ),
+        super(key: key);
+
+  final Widget? leading;
+  final Widget? title;
+  final Widget? subtitle;
+  final ValueChanged<bool>? onExpansionChanged;
+  final List<Widget> children;
+  final Color? backgroundColor;
+  final Color? collapsedBackgroundColor;
+  final Widget? trailing;
+  final bool initiallyExpanded;
+  final bool maintainState;
+  final EdgeInsetsGeometry? tilePadding;
+  final Alignment? expandedAlignment;
+  final CrossAxisAlignment? expandedCrossAxisAlignment;
+  final EdgeInsetsGeometry? childrenPadding;
+  final Color? iconColor;
+  final Color? collapsedIconColor;
+  final Color? textColor;
+  final Color? collapsedTextColor;
+  final ListTileControlAffinity? controlAffinity;
+
+  @override
+  State<ExpansionTile> createState() => _ExpansionTileState();
+}
+
+class _ExpansionTileState extends State<ExpansionTile> with SingleTickerProviderStateMixin {
+  static final Animatable<double> _easeOutTween = CurveTween(curve: Curves.easeOut);
+  static final Animatable<double> _easeInTween = CurveTween(curve: Curves.easeIn);
+  static final Animatable<double> _halfTween = Tween<double>(begin: 0.0, end: 0.5);
+
+  final ColorTween _borderColorTween = ColorTween();
+  final ColorTween _headerColorTween = ColorTween();
+  final ColorTween _iconColorTween = ColorTween();
+  final ColorTween _backgroundColorTween = ColorTween();
+
+  late AnimationController _controller;
+  late Animation<double> _iconTurns;
+  late Animation<double> _heightFactor;
+  late Animation<Color?> _borderColor;
+  late Animation<Color?> _headerColor;
+  late Animation<Color?> _iconColor;
+  late Animation<Color?> _backgroundColor;
+
+  bool _isExpanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(duration: Duration(milliseconds: 200), vsync: this);
+    _heightFactor = _controller.drive(_easeInTween);
+    _iconTurns = _controller.drive(_halfTween.chain(_easeInTween));
+    _borderColor = _controller.drive(_borderColorTween.chain(_easeOutTween));
+    _headerColor = _controller.drive(_headerColorTween.chain(_easeInTween));
+    _iconColor = _controller.drive(_iconColorTween.chain(_easeInTween));
+    _backgroundColor = _controller.drive(_backgroundColorTween.chain(_easeOutTween));
+
+    _isExpanded = PageStorage.of(context)?.readState(context) as bool? ?? widget.initiallyExpanded;
+    if (_isExpanded) _controller.value = 1.0;
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _handleTap() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+      if (_isExpanded) {
+        _controller.forward();
+      } else {
+        _controller.reverse().then<void>((void value) {
+          if (!mounted) return;
+          setState(() {
+            // Rebuild without widget.children.
+          });
+        });
+      }
+      PageStorage.of(context)?.writeState(context, _isExpanded);
+    });
+    widget.onExpansionChanged?.call(_isExpanded);
+  }
+
+  // Platform or null affinity defaults to trailing.
+  ListTileControlAffinity _effectiveAffinity(ListTileControlAffinity? affinity) {
+    switch (affinity ?? ListTileControlAffinity.trailing) {
+      case ListTileControlAffinity.leading:
+        return ListTileControlAffinity.leading;
+      case ListTileControlAffinity.trailing:
+      case ListTileControlAffinity.platform:
+        return ListTileControlAffinity.trailing;
+    }
+  }
+
+  Widget? _buildIcon(BuildContext context) {
+    return RotationTransition(
+      turns: _iconTurns,
+      child: const Icon(Icons.expand_more),
+    );
+  }
+
+  Widget? _buildLeadingIcon(BuildContext context) {
+    if (_effectiveAffinity(widget.controlAffinity) != ListTileControlAffinity.leading) return null;
+    return _buildIcon(context);
+  }
+
+  Widget? _buildTrailingIcon(BuildContext context) {
+    if (_effectiveAffinity(widget.controlAffinity) != ListTileControlAffinity.trailing) return null;
+    return _buildIcon(context);
+  }
+
+  Widget _buildChildren(BuildContext context, Widget? child) {
+    final Color borderSideColor = _borderColor.value ?? Colors.transparent;
+
+    return Container(
+      decoration:  BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ListTileTheme.merge(
+            iconColor: _iconColor.value,
+            textColor: _headerColor.value,
+            child: ListTile(
+              onTap: _handleTap,
+              contentPadding: widget.tilePadding,
+              leading: widget.leading ?? _buildLeadingIcon(context),
+              title: widget.title,
+              subtitle: widget.subtitle,
+              trailing: widget.trailing ?? _buildTrailingIcon(context),
+            ),
+          ),
+          ClipRect(
+            child: Align(
+              alignment: widget.expandedAlignment ?? Alignment.center,
+              heightFactor: _heightFactor.value,
+              child: child,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    _borderColorTween.end = theme.dividerColor;
+    _headerColorTween
+      ..begin = widget.collapsedTextColor ?? theme.textTheme.subtitle1!.color
+      ..end = widget.textColor ?? colorScheme.primary;
+    _iconColorTween
+      ..begin = widget.collapsedIconColor ?? theme.unselectedWidgetColor
+      ..end = widget.iconColor ?? colorScheme.primary;
+    _backgroundColorTween
+      ..begin = widget.collapsedBackgroundColor
+      ..end = widget.backgroundColor;
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool closed = !_isExpanded && _controller.isDismissed;
+    final bool shouldRemoveChildren = closed && !widget.maintainState;
+
+    final Widget result = Offstage(
+      offstage: closed,
+      child: TickerMode(
+        enabled: !closed,
+        child: Padding(
+          padding: widget.childrenPadding ?? EdgeInsets.zero,
+          child: Column(
+            crossAxisAlignment: widget.expandedCrossAxisAlignment ?? CrossAxisAlignment.center,
+            children: widget.children,
+          ),
+        ),
+      ),
+    );
+
+    return AnimatedBuilder(
+      animation: _controller.view,
+      builder: _buildChildren,
+      child: shouldRemoveChildren ? null : result,
+    );
+  }
+}
+
+class EventNotePage extends StatefulWidget {
+  const EventNotePage({Key? key}) : super(key: key);
+
+  @override
+  _EventNotePageState createState() => _EventNotePageState();
+}
+
+class _EventNotePageState extends State<EventNotePage> {
+  @override
+  Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom;
+    double width = MediaQuery.of(context).size.width;
+    return KeyboardVisibilityBuilder(builder: (context1, visible) {
+      return Scaffold(
+        body: Container(
+          width: width,
+          height: height,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.fromRGBO(3, 64, 156, 1),
+                Color.fromRGBO(1, 0, 54, 1),
+              ],
+            ),
+          ),
+          child: Column(
+            children: [
+              const Spacer(flex: 2),
+              Column(
+                children: [
+                  //#region Logo
+                  Container(
+                    alignment: Alignment.topCenter,
+                    width: width * 0.4,
+                    child: SvgPicture.asset('assets/image/logo.svg'),
+                  ),
+                  //#endregion
+                  Visibility(
+                    visible: height > 350,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 23),
+                      child: Text(
+                        "The best solutions from the best team",
+                        style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w300,
+                          color: Colors.white.withOpacity(0.6),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              const Spacer(flex: 1),
+              //#region Note
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: width * 0.05),
+                height: height * 0.3,
+                decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
+                child: TextFormField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  initialValue: '',
+                  style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Note',
+                    hintStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
+                    contentPadding: const EdgeInsets.all(10),
+                  ),
+                ),
+              ),
+              //#endregion
+              const Spacer(flex: 4),
+              //#region Back
+              Container(
+                alignment: Alignment.bottomLeft,
+                margin: const EdgeInsets.only(bottom: 39, left: 26),
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Text(
+                    'Save and return',
+                    style: GoogleFonts.montserrat(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ),
+              //#endregion
             ],
           ),
         ),
