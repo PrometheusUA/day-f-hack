@@ -14,6 +14,73 @@ Image imageFromBase64String(String base64String) {
   return Image.memory(base64Decode(base64String));
 }
 
+class Hashtag {
+  final Color background_color;
+  final Color color;
+  final String name;
+
+  Hashtag(this.background_color, this.color, this.name);
+
+  factory Hashtag.fromJson(Map<String, dynamic> json) {
+    return Hashtag(
+      json['background_color'],
+      json['color'],
+      json['name'],
+    );
+  }
+}
+
+class Task {
+  final String description;
+  final int user_id;
+  final bool can_be_performed_after_dd;
+  final DateTime deadline;
+  final DateTime start_time;
+  final DateTime completed_at;
+  final bool importance;
+  final int id;
+  final String name;
+  final bool result;
+  final Duration duration_of_completing;
+  final DateTime created_at;
+  final String recommendation;
+  final List<String> hashtags;
+  Task(
+      {required this.completed_at,
+      required this.description,
+      required this.user_id,
+      required this.can_be_performed_after_dd,
+      required this.deadline,
+      required this.start_time,
+      required this.importance,
+      required this.id,
+      required this.name,
+      required this.result,
+      required this.duration_of_completing,
+      required this.created_at,
+      required this.recommendation,
+      required this.hashtags});
+
+  factory Task.fromJson(Map<String, dynamic> json) {
+    return Task(
+      can_be_performed_after_dd: json['can_be_performed_after_dd'],
+      completed_at: json['completed_at'],
+      created_at: json['created_at'],
+      deadline: json[''],
+      description: json['description'],
+      duration_of_completing: json['duration_of_completing'],
+      id: json['id'],
+      importance: json['importance'],
+      hashtags: json['hashtags'],
+      name: json['name'],
+      recommendation: json['recommendation'],
+      result: json['result'],
+      start_time: json['start_time'],
+      user_id: json['user_id'],
+    );
+  }
+}
+
 void main() {
   runApp(
     MaterialApp(
@@ -247,7 +314,7 @@ class _SignInPageState extends State<SignInPage> {
   String password = "";
   int status = 0;
 
-  void SignUp() async {
+  void signin() async {
     status = 0;
     var response = await http.post(
       Uri.parse('https://fastapihackatonapi.herokuapp.com/auth/login'),
@@ -372,7 +439,7 @@ class _SignInPageState extends State<SignInPage> {
                       margin: const EdgeInsets.only(top: 9),
                       child: GestureDetector(
                         onTap: () {
-                          SignUp();
+                          signin();
                           setState(() {});
                         },
                         child: Align(
@@ -685,9 +752,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int index = 0;
+
   @override
   Widget build(BuildContext context) {
-    String token = (ModalRoute.of(context)!.settings.arguments as List)[0];
+    String token = (ModalRoute.of(context)!.settings.arguments as List)[0].toString();
 
     PageController controller = PageController(initialPage: index);
     double height = MediaQuery.of(context).size.height;
@@ -829,9 +897,11 @@ class _HomePageState extends State<HomePage> {
         //#endregion
         body: PageView(
           controller: controller,
-          children: const [
+          children: [
             Home1Page(),
-            Home2Page(),
+            Home2Page(
+              token: token,
+            ),
             Home3Page(),
           ],
           onPageChanged: (i) => setState(() => index = i),
@@ -1161,15 +1231,48 @@ class _Home1PageState extends State<Home1Page> {
 }
 
 class Home2Page extends StatefulWidget {
-  const Home2Page({Key? key}) : super(key: key);
+  final String token;
+  const Home2Page({Key? key, required this.token}) : super(key: key);
 
   @override
   _Home2PageState createState() => _Home2PageState();
 }
 
 class _Home2PageState extends State<Home2Page> {
+  List<Future<Task>> items = [];
+  void func() async {
+    final response =
+        await http.get(Uri.parse('https://fastapihackatonapi.herokuapp.com/task/all'), headers: {'Authorization': 'Bearer ${widget.token}'});
+    print(jsonDecode(response.body)['tasks']);
+    if (response.statusCode == 200) {
+      List<dynamic> a = jsonDecode(response.body)['tasks'];
+      for (var element in a) {
+        items.add(
+          fetchTask(element as Map<String, dynamic>),
+        );
+      }
+    }
+  }
+
+  void add() async {
+    var response = await http.post(
+      Uri.parse('https://fastapihackatonapi.herokuapp.com/task/create'),
+      headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer ${widget.token}'},
+      body: jsonEncode(
+        <String, String>{'name': "Task1", 'deadline': "${DateTime.utc(2021, 12, 06)}", 'hashtags': "[]"},
+      ),
+    );
+    print(response.)
+  }
+
+  Future<Task> fetchTask(Map<String, dynamic> el) async {
+    return Task.fromJson(el);
+  }
+
   @override
   Widget build(BuildContext context) {
+    add();
+    func();
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Stack(
@@ -1348,7 +1451,7 @@ class _Home2PageState extends State<Home2Page> {
                         decoration: BoxDecoration(
                           color: const Color.fromRGBO(250, 252, 173, 1),
                           borderRadius: BorderRadius.circular(3),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Color.fromRGBO(250, 252, 173, 1),
                               spreadRadius: 0,
@@ -1807,19 +1910,32 @@ class _AddEventPage2State extends State<AddEventPage2> {
                 child: Column(
                   children: [
                     //#region Name
-                    Container(
-                      height: 37,
-                      decoration: BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
-                      child: TextFormField(
-                        initialValue: '',
-                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.5)),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Event Name',
-                          hintStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
-                          contentPadding: const EdgeInsets.only(left: 14.5, bottom: 9),
-                        ),
+                    DropdownButtonFormField(
+                      onTap: () {},
+                      value: 0,
+                      decoration: const InputDecoration(
+                        contentPadding: const EdgeInsets.all(0.0),
                       ),
+                      items: [
+                        DropdownMenuItem<int>(
+                          value: 0,
+                          child: Container(
+                            width: 100,
+                            child: const Text(
+                              "less character",
+                            ),
+                          ),
+                        ),
+                        DropdownMenuItem<int>(
+                          value: 1,
+                          child: Container(
+                            width: 100,
+                            child: const Text(
+                              "mooooorrrrreeee character",
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     //#endregion
                     //#region Note
@@ -1878,7 +1994,7 @@ class _AddEventPage2State extends State<AddEventPage2> {
                       ),
                     ),
                     //#endregion
-                    //#region Next
+                    //#region Register
                     Container(
                       width: width * 0.86,
                       height: 48.37,
@@ -1904,233 +2020,12 @@ class _AddEventPage2State extends State<AddEventPage2> {
                   ],
                 ),
               ),
-              ExpansionTile(
-                children: [Text("h"),Text("h")],
-              ),
               const Spacer(flex: 1),
             ],
           ),
         ),
       );
     });
-  }
-}
-
-class ExpansionTile extends StatefulWidget {
-  const ExpansionTile({
-    Key? key,
-    this.leading,
-    this.title,
-    this.subtitle,
-    this.onExpansionChanged,
-    this.children = const <Widget>[],
-    this.trailing,
-    this.initiallyExpanded = false,
-    this.maintainState = false,
-    this.tilePadding,
-    this.expandedCrossAxisAlignment,
-    this.expandedAlignment,
-    this.childrenPadding,
-    this.backgroundColor,
-    this.collapsedBackgroundColor,
-    this.textColor,
-    this.collapsedTextColor,
-    this.iconColor,
-    this.collapsedIconColor,
-    this.controlAffinity,
-  })  : assert(initiallyExpanded != null),
-        assert(maintainState != null),
-        assert(
-          expandedCrossAxisAlignment != CrossAxisAlignment.baseline,
-          'CrossAxisAlignment.baseline is not supported since the expanded children '
-          'are aligned in a column, not a row. Try to use another constant.',
-        ),
-        super(key: key);
-
-  final Widget? leading;
-  final Widget? title;
-  final Widget? subtitle;
-  final ValueChanged<bool>? onExpansionChanged;
-  final List<Widget> children;
-  final Color? backgroundColor;
-  final Color? collapsedBackgroundColor;
-  final Widget? trailing;
-  final bool initiallyExpanded;
-  final bool maintainState;
-  final EdgeInsetsGeometry? tilePadding;
-  final Alignment? expandedAlignment;
-  final CrossAxisAlignment? expandedCrossAxisAlignment;
-  final EdgeInsetsGeometry? childrenPadding;
-  final Color? iconColor;
-  final Color? collapsedIconColor;
-  final Color? textColor;
-  final Color? collapsedTextColor;
-  final ListTileControlAffinity? controlAffinity;
-
-  @override
-  State<ExpansionTile> createState() => _ExpansionTileState();
-}
-
-class _ExpansionTileState extends State<ExpansionTile> with SingleTickerProviderStateMixin {
-  static final Animatable<double> _easeOutTween = CurveTween(curve: Curves.easeOut);
-  static final Animatable<double> _easeInTween = CurveTween(curve: Curves.easeIn);
-  static final Animatable<double> _halfTween = Tween<double>(begin: 0.0, end: 0.5);
-
-  final ColorTween _borderColorTween = ColorTween();
-  final ColorTween _headerColorTween = ColorTween();
-  final ColorTween _iconColorTween = ColorTween();
-  final ColorTween _backgroundColorTween = ColorTween();
-
-  late AnimationController _controller;
-  late Animation<double> _iconTurns;
-  late Animation<double> _heightFactor;
-  late Animation<Color?> _borderColor;
-  late Animation<Color?> _headerColor;
-  late Animation<Color?> _iconColor;
-  late Animation<Color?> _backgroundColor;
-
-  bool _isExpanded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(duration: Duration(milliseconds: 200), vsync: this);
-    _heightFactor = _controller.drive(_easeInTween);
-    _iconTurns = _controller.drive(_halfTween.chain(_easeInTween));
-    _borderColor = _controller.drive(_borderColorTween.chain(_easeOutTween));
-    _headerColor = _controller.drive(_headerColorTween.chain(_easeInTween));
-    _iconColor = _controller.drive(_iconColorTween.chain(_easeInTween));
-    _backgroundColor = _controller.drive(_backgroundColorTween.chain(_easeOutTween));
-
-    _isExpanded = PageStorage.of(context)?.readState(context) as bool? ?? widget.initiallyExpanded;
-    if (_isExpanded) _controller.value = 1.0;
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _handleTap() {
-    setState(() {
-      _isExpanded = !_isExpanded;
-      if (_isExpanded) {
-        _controller.forward();
-      } else {
-        _controller.reverse().then<void>((void value) {
-          if (!mounted) return;
-          setState(() {
-            // Rebuild without widget.children.
-          });
-        });
-      }
-      PageStorage.of(context)?.writeState(context, _isExpanded);
-    });
-    widget.onExpansionChanged?.call(_isExpanded);
-  }
-
-  // Platform or null affinity defaults to trailing.
-  ListTileControlAffinity _effectiveAffinity(ListTileControlAffinity? affinity) {
-    switch (affinity ?? ListTileControlAffinity.trailing) {
-      case ListTileControlAffinity.leading:
-        return ListTileControlAffinity.leading;
-      case ListTileControlAffinity.trailing:
-      case ListTileControlAffinity.platform:
-        return ListTileControlAffinity.trailing;
-    }
-  }
-
-  Widget? _buildIcon(BuildContext context) {
-    return RotationTransition(
-      turns: _iconTurns,
-      child: const Icon(Icons.expand_more),
-    );
-  }
-
-  Widget? _buildLeadingIcon(BuildContext context) {
-    if (_effectiveAffinity(widget.controlAffinity) != ListTileControlAffinity.leading) return null;
-    return _buildIcon(context);
-  }
-
-  Widget? _buildTrailingIcon(BuildContext context) {
-    if (_effectiveAffinity(widget.controlAffinity) != ListTileControlAffinity.trailing) return null;
-    return _buildIcon(context);
-  }
-
-  Widget _buildChildren(BuildContext context, Widget? child) {
-    final Color borderSideColor = _borderColor.value ?? Colors.transparent;
-
-    return Container(
-      decoration:  BoxDecoration(color: const Color.fromRGBO(255, 255, 255, 0.09), borderRadius: BorderRadius.circular(5.37)),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          ListTileTheme.merge(
-            iconColor: _iconColor.value,
-            textColor: _headerColor.value,
-            child: ListTile(
-              onTap: _handleTap,
-              contentPadding: widget.tilePadding,
-              leading: widget.leading ?? _buildLeadingIcon(context),
-              title: widget.title,
-              subtitle: widget.subtitle,
-              trailing: widget.trailing ?? _buildTrailingIcon(context),
-            ),
-          ),
-          ClipRect(
-            child: Align(
-              alignment: widget.expandedAlignment ?? Alignment.center,
-              heightFactor: _heightFactor.value,
-              child: child,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  void didChangeDependencies() {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
-    _borderColorTween.end = theme.dividerColor;
-    _headerColorTween
-      ..begin = widget.collapsedTextColor ?? theme.textTheme.subtitle1!.color
-      ..end = widget.textColor ?? colorScheme.primary;
-    _iconColorTween
-      ..begin = widget.collapsedIconColor ?? theme.unselectedWidgetColor
-      ..end = widget.iconColor ?? colorScheme.primary;
-    _backgroundColorTween
-      ..begin = widget.collapsedBackgroundColor
-      ..end = widget.backgroundColor;
-    super.didChangeDependencies();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bool closed = !_isExpanded && _controller.isDismissed;
-    final bool shouldRemoveChildren = closed && !widget.maintainState;
-
-    final Widget result = Offstage(
-      offstage: closed,
-      child: TickerMode(
-        enabled: !closed,
-        child: Padding(
-          padding: widget.childrenPadding ?? EdgeInsets.zero,
-          child: Column(
-            crossAxisAlignment: widget.expandedCrossAxisAlignment ?? CrossAxisAlignment.center,
-            children: widget.children,
-          ),
-        ),
-      ),
-    );
-
-    return AnimatedBuilder(
-      animation: _controller.view,
-      builder: _buildChildren,
-      child: shouldRemoveChildren ? null : result,
-    );
   }
 }
 
