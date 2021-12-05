@@ -47,19 +47,19 @@ class Task {
   final List<String> hashtags;
   Task(
       {required this.completed_at,
-      required this.description,
-      required this.user_id,
-      required this.can_be_performed_after_dd,
-      required this.deadline,
-      required this.start_time,
-      required this.importance,
-      required this.id,
-      required this.name,
-      required this.result,
-      required this.duration_of_completing,
-      required this.created_at,
-      required this.recommendation,
-      required this.hashtags});
+        required this.description,
+        required this.user_id,
+        required this.can_be_performed_after_dd,
+        required this.deadline,
+        required this.start_time,
+        required this.importance,
+        required this.id,
+        required this.name,
+        required this.result,
+        required this.duration_of_completing,
+        required this.created_at,
+        required this.recommendation,
+        required this.hashtags});
 
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
@@ -698,8 +698,8 @@ class _SignInTwoPageState extends State<SignUpPageTwo> {
                           errorText: status == 1
                               ? "enter username"
                               : status == 2
-                                  ? "incorrect username"
-                                  : null,
+                              ? "incorrect username"
+                              : null,
                           hintText: 'Create username',
                           hintStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w400, color: const Color.fromRGBO(255, 255, 255, 0.45)),
                           contentPadding: const EdgeInsets.only(left: 14.5, bottom: 9),
@@ -843,7 +843,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 onTap: () => setState(
-                  () {
+                      () {
                     index = 0;
                     controller.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
                   },
@@ -863,7 +863,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 onTap: () => setState(
-                  () {
+                      () {
                     index = 1;
                     controller.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                   },
@@ -885,7 +885,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 onTap: () => setState(
-                  () {
+                      () {
                     index = 2;
                     controller.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                   },
@@ -1242,7 +1242,7 @@ class _Home2PageState extends State<Home2Page> {
   List<Future<Task>> items = [];
   void func() async {
     final response =
-        await http.get(Uri.parse('https://fastapihackatonapi.herokuapp.com/task/all'), headers: {'Authorization': 'Bearer ${widget.token}'});
+    await http.get(Uri.parse('https://fastapihackatonapi.herokuapp.com/task/all'), headers: {'Authorization': 'Bearer ${widget.token}'});
     print(jsonDecode(response.body)['tasks']);
     if (response.statusCode == 200) {
       List<dynamic> a = jsonDecode(response.body)['tasks'];
@@ -1262,7 +1262,7 @@ class _Home2PageState extends State<Home2Page> {
         <String, String>{'name': "Task1", 'deadline': "${DateTime.utc(2021, 12, 06)}", 'hashtags': "[]"},
       ),
     );
-    print(response.)
+    // print(response.)
   }
 
   Future<Task> fetchTask(Map<String, dynamic> el) async {
@@ -1491,7 +1491,7 @@ class _Home2PageState extends State<Home2Page> {
           width: width * 0.918,
           child: Center(
             child: Text(
-              "Your upcoming deadlines",
+              "Daily recommendations",
               style: GoogleFonts.montserrat(fontSize: 28, fontWeight: FontWeight.w400, color: Colors.white),
             ),
           ),
